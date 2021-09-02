@@ -118,6 +118,14 @@ class Model_dis extends CI_Model
 		return $this->db->get();
 	}
 
+	public function getById($tbl, $id)
+	{
+		$this->db->select("*");
+		$this->db->from($tbl);
+		$this->db->where('id', $id);
+		return $this->db->get();
+	}
+
 	public function export_pembelian($start_date, $end_date)
 	{
 		$a = $start_date . ' 00:00:00';
@@ -257,7 +265,7 @@ class Model_dis extends CI_Model
 	function getListPo($cari = '')
 	{
 		$sql = "SELECT 
-		pembelian.kode_pembelian as no_po, pembelian.tanggal, SUM(pembelian.qty) as total_qty, COUNT(pembelian.id_barang) as count_barang,
+		pembelian.kode_pembelian as no_po, pembelian.tanggal, SUM(pembelian.qty) as total_qty, COUNT(pembelian.id_barang) as count_barang, SUM(stok_barang.harga * pembelian.qty) AS total_harga,
 		pemasok.nama_pemasok
 		FROM `pembelian`
 		LEFT JOIN stok_barang ON pembelian.id_barang = stok_barang.id
@@ -317,6 +325,19 @@ class Model_dis extends CI_Model
 		LEFT JOIN pemasok ON stok_barang.pemasok_id = pemasok.id_pemasok")->result_array();
 	}
 
+	function getEditPenjualanById($d)
+	{
+		return $this->db->query("SELECT 
+		penjualan.kode_penjualan, penjualan.qty, penjualan.harga, penjualan.id,
+		konsumen.nama, konsumen.id as konsumen_id,
+        stok_barang.kode_barang, stok_barang.nama_barang, stok_barang.id as id_barang, stok_barang.satuan
+		FROM `penjualan`
+		LEFT JOIN konsumen ON penjualan.id_konsumen = konsumen.id
+		LEFT JOIN stok_barang ON penjualan.id_barang = stok_barang.id
+		WHERE penjualan.kode_penjualan='$d'
+		");
+	}
+
 	function getReturById($id)
 	{
 		return $this->db->query("
@@ -333,7 +354,7 @@ class Model_dis extends CI_Model
 	function getListPembelianPrintById($d)
 	{
 		return $this->db->query("SELECT 
-		stok_barang.nama_barang, stok_barang.kode_barang,
+		stok_barang.nama_barang, stok_barang.kode_barang, stok_barang.harga, (stok_barang.harga * pembelian.qty) as total_harga,
 		pemasok.nama_pemasok,
 		pembelian.kode_pembelian, pembelian.qty, pembelian.tanggal
 		FROM `pembelian`
@@ -346,7 +367,7 @@ class Model_dis extends CI_Model
 	function getListPenjualannPrintById($d)
 	{
 		return $this->db->query("SELECT 
-		penjualan.kode_penjualan, penjualan.tanggal, penjualan.qty, penjualan.harga,
+		penjualan.kode_penjualan, penjualan.tanggal, penjualan.qty, penjualan.harga, (penjualan.qty * penjualan.harga) as total_harga,
 		konsumen.nama,
         stok_barang.kode_barang, stok_barang.nama_barang
 		FROM `penjualan`
@@ -359,7 +380,7 @@ class Model_dis extends CI_Model
 	function getListPenjualannPrint()
 	{
 		return $this->db->query("SELECT 
-		COUNT(penjualan.id_barang) as total_barang, SUM(penjualan.qty) AS total_qty, penjualan.kode_penjualan, penjualan.tanggal,
+		COUNT(penjualan.id_barang) as total_barang, SUM(penjualan.qty) AS total_qty, penjualan.kode_penjualan, penjualan.tanggal, SUM(penjualan.qty * penjualan.harga) AS total_harga,
 		konsumen.nama
 		FROM `penjualan`
 		LEFT JOIN konsumen ON penjualan.id_konsumen = konsumen.id
@@ -382,7 +403,7 @@ class Model_dis extends CI_Model
 	function getListPenjualanNew()
 	{
 		return $this->db->query("SELECT 
-		COUNT(penjualan.id_barang) as total_barang, SUM(penjualan.qty) AS total_qty, penjualan.kode_penjualan, penjualan.tanggal,
+		COUNT(penjualan.id_barang) as total_barang, SUM(penjualan.qty) AS total_qty, penjualan.kode_penjualan, penjualan.tanggal, SUM(penjualan.qty * penjualan.harga) AS total_harga,
 		konsumen.nama
 		FROM `penjualan`
 		LEFT JOIN konsumen ON penjualan.id_konsumen = konsumen.id

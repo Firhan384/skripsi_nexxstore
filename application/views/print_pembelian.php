@@ -23,6 +23,7 @@
 					<th>Jumlah barang</th>
 					<th>Total Qty</th>
 					<th>Konsumen</th>
+					<th>Konsumen</th>
 					<th>Tanggal</th>
 				</tr>
 			</thead>
@@ -37,6 +38,7 @@
 						<td><?= $value->total_barang; ?></td>
 						<td><?= $value->total_qty; ?></td>
 						<td><?= $value->nama; ?></td>
+						<td><?= $value->total_harga; ?></td>
 						<td><?= $value->tanggal; ?></td>
 					</tr>
 				<?php

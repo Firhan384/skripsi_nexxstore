@@ -20,7 +20,6 @@
                             <td width="40%;">Nama Barang</td>
                             <td width="10%;">Stok</td>
                             <td width="10%;">Satuan</td>
-                            <td>Option</td>
                         </tr>
 
                         <?php
@@ -28,7 +27,7 @@
 						foreach($hasil as $r) { ?>	
 						<tr>
 							<td><?php echo $no++ ?></td>
-							<td><?php echo $r['id_barang'] ?></td>
+							<td><?php echo $r['kode_barang'] ?></td>
 							<td><?php echo $r['nama_barang'] ?></td>
 							<td><?php echo $r['stok_barang'] ?></td>
 							<td><?php echo $r['satuan'] ?></td>

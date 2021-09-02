@@ -171,10 +171,10 @@
 					success: function(data, textStatus, jqXHR) {
 						if(data.valid) {
 							alert(data.message);
+							window.location.reload();
 						} else {
 							alert(data.message);
 						}
-						window.location.reload();
 					}
 				});
 			}

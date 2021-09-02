@@ -43,7 +43,9 @@
                 <th>Kode Pembelian</th>
                 <th>Nama Barang</th>
                 <th>Qty</th>
+                <th>Harga</th>
                 <th>Konsumen</th>
+                <th>Total Harga</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -57,7 +59,9 @@
                     <td><?= $value->kode_penjualan; ?></td>
                     <td><?= $value->nama_barang; ?></td>
                     <td><?= $value->qty; ?></td>
+                    <td><?= $value->harga; ?></td>
                     <td><?= $value->nama; ?></td>
+                    <td><?= $value->total_harga; ?></td>
                     <td><?= $value->tanggal; ?></td>
                 </tr>
             <?php

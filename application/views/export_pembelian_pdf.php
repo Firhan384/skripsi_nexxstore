@@ -44,6 +44,8 @@
                 <th>Nama Barang</th>
                 <th>Kode Barang</th>
                 <th>Qty</th>
+                <th>harga</th>
+                <th>total harga</th>
                 <th>Supplier</th>
                 <th>Tanggal</th>
             </tr>
@@ -59,6 +61,8 @@
                     <td><?= $value->nama_barang; ?></td>
                     <td><?= $value->kode_barang; ?></td>
                     <td><?= $value->qty; ?></td>
+                    <td><?= $value->harga; ?></td>
+                    <td><?= $value->total_harga; ?></td>
                     <td><?= $value->nama_pemasok; ?></td>
                     <td><?= $value->tanggal; ?></td>
                 </tr>

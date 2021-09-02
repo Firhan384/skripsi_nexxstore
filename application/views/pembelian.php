@@ -51,7 +51,7 @@
                         <input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
 
 
-                        <a href="<?php echo site_url('welcome/input_pembelian') ?>" style='margin-left: 10%;'>Input Pembelian</a> || <a href="<?php echo site_url('welcome/print_pesanan') ?>">Print Pembelian</a>
+                        <a href="<?php echo site_url('welcome/input_pembelian') ?>" style='margin-left: 10%;'>Input Pembelian</a> || <a href="<?php echo site_url('welcome/print_pesanan') ?>" target="_blank">Print Pembelian</a>
 
 
                     </form>
@@ -65,6 +65,7 @@
                             <th>Kode Pembelian</th>
                             <th>Jumlah barang</th>
                             <th>Total Qty</th>
+                            <th>Total Harga</th>
                             <th>Supplier</th>
                             <th>Tanggal</th>
                             <th>Option</th>
@@ -80,12 +81,13 @@
                                 <td><?= $value->no_po; ?></td>
                                 <td><?= $value->count_barang; ?></td>
                                 <td><?= $value->total_qty; ?></td>
+                                <td><?= $value->total_harga; ?></td>
                                 <td><?= $value->nama_pemasok; ?></td>
                                 <td><?= $value->tanggal; ?></td>
                                 <td>
                                     <a href="<?php echo site_url('welcome/form_edit_pembelian/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;">Edit</a> ||
                                     <a href="<?php echo site_url('welcome/delete_pmsk/' . $value->no_po) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a> || 
-                                    <a href="<?php echo site_url('welcome/export_pembelian_pdf/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;">Export</a>
+                                    <a href="<?php echo site_url('welcome/export_pembelian_pdf/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;" target="_blank">Export</a>
                                 </td>
                             </tr>
                         <?php

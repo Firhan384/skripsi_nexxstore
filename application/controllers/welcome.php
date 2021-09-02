@@ -368,7 +368,7 @@ class Welcome extends CI_Controller
 	{
 		$data['stockAvailable'] =  $this->model_dis->stockAvailable()->result_array();
 		$data['konsumen'] = $this->model_dis->getUser('konsumen');
-		$data['dataEdit2'] = $this->model_dis->dataEdit2('penjualan', $id);
+		$data['data'] = $this->model_dis->getEditPenjualanById($id)->result_array();
 		$this->load->view('edit_pesanan', $data);
 	}
 
@@ -467,13 +467,12 @@ class Welcome extends CI_Controller
 		}
 	}
 
-	function create_penjualan()
+	function update_penjualan()
 	{
 		$data = $_POST['data'];
-		var_dump($data);
+
 		for ($i = 0; $i < count($data); $i++) {
 			$productData = $this->model_dis->getProductById($_POST['data'][$i]['barang_id'])->row();
-
 			if ($productData == NULL) {
 				echo json_encode([
 					'valid' => false,
@@ -485,18 +484,78 @@ class Welcome extends CI_Controller
 			if (intval($_POST['data'][$i]['jml']) > $productData->stok_barang) {
 				echo json_encode([
 					'valid' => false,
-					'message' => "stock barang tidak cukup"
+					'message' => "stock barang {$productData->nama_barang} || {$productData->kode_barang} tidak cukup"
+				]);
+				exit(0);
+			}
+
+			// set data
+			$kode_penjualan = $_POST['data'][$i]['id_pesanan'];
+			$id_peng = $this->session->userdata('id_log');
+			$jml = $_POST['data'][$i]['jml'];
+
+			if ($_POST['data'][$i]['status'] == 'new') {
+				$datas = array('kode_penjualan' => $kode_penjualan, 'id_user' => $id_peng, 'id_barang' =>
+				$productData->id, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_konsumen' => $_POST['data'][$i]['konsumen_id'], 'harga' => $_POST['data'][$i]['harga']);
+				$this->model_dis->tambah_user('penjualan', $datas);
+
+				// update
+				$this->model_dis->editData('stok_barang', [
+					'stok_barang' => ($productData->stok_barang - intval($jml))
+				], $productData->id);
+			} else {
+				$findData = $this->model_dis->getById('penjualan', $_POST['data'][$i]['id'])->row();
+				if($findData->qty > intval($jml)) {
+					$qty = $productData->stok_barang + ($findData->qty - intval($jml));
+				} else {
+					$qty = $productData->stok_barang - ($findData->qty - intval($jml));
+				}
+
+				$datas = array('kode_penjualan' => $kode_penjualan, 'id_user' => $id_peng, 'id_barang' =>
+				$productData->id, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_konsumen' => $_POST['data'][$i]['konsumen_id'], 'harga' => $_POST['data'][$i]['harga']);
+
+				// update
+				$this->model_dis->editData('penjualan', $datas, $_POST['data'][$i]['id']);
+				// update
+				$this->model_dis->editData('stok_barang', [
+					'stok_barang' => $qty
+				], $productData->id);
+			}
+		}
+
+		echo json_encode([
+			'valid' => true,
+			'message' => "berhasil update penjualan"
+		]);
+	}
+
+	function create_penjualan()
+	{
+		$data = $_POST['data'];
+		for ($i = 0; $i < count($data); $i++) {
+			$productData = $this->model_dis->getProductById($_POST['data'][$i]['barang_id'])->row();
+			if ($productData == NULL) {
+				echo json_encode([
+					'valid' => false,
+					'message' => "product tidak ada"
+				]);
+				exit(0);
+			}
+
+			if (intval($_POST['data'][$i]['jml']) > $productData->stok_barang) {
+				echo json_encode([
+					'valid' => false,
+					'message' => "stock barang {$productData->nama_barang} || {$productData->kode_barang} tidak cukup"
 				]);
 				exit(0);
 			}
 
 			$id_pesanan = $_POST['data'][$i]['id_pesanan'];
 			$id_peng = $this->session->userdata('id_log');
-			$id_barang = $_POST['data'][$i]['barang_id'];
 			$jml = $_POST['data'][$i]['jml'];
-			$data = array('kode_penjualan' => $id_pesanan, 'id_user' => $id_peng, 'id_barang' =>
-			$id_barang, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_konsumen' => $_POST['data'][$i]['konsumen_id'], 'harga' => $_POST['data'][$i]['harga']);
-			$this->model_dis->tambah_user('penjualan', $data);
+			$datas = array('kode_penjualan' => $id_pesanan, 'id_user' => $id_peng, 'id_barang' =>
+			$productData->id, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_konsumen' => $_POST['data'][$i]['konsumen_id'], 'harga' => $_POST['data'][$i]['harga']);
+			$this->model_dis->tambah_user('penjualan', $datas);
 
 			$this->model_dis->editData('stok_barang', [
 				'stok_barang' => ($productData->stok_barang - intval($jml))

@@ -38,14 +38,6 @@
 		<?php
 		$this->load->view('layout/navbar.php');
 		?>
-		<div class="bag-menu-cari">
-			<div class="input-barang-1">
-				<form method="post" action="<?php echo site_url('welcome/export_excel_stok') ?>">
-
-					<input type="submit" name="cari" value="Export Excel" style="width:15%; height:25px; padding-left:0px;" />
-				</form>
-			</div>
-		</div>
 
 		<?php
 		if (!empty($stock_warn) && ($this->session->userdata('status') === 'admin' || $this->session->userdata('status') === 'manager')) :
@@ -76,8 +68,8 @@
 
 
 						<a href="<?php echo site_url('welcome/input_barang') ?>" style='margin-left: 10%;'>Input Barang</a>
-						|| <a href="<?php echo site_url('welcome/print_barang') ?>">Print Barang</a>
-
+						|| <a href="<?php echo site_url('welcome/print_barang') ?>" target="_blank">Print Barang</a>
+						|| <a href="<?php echo site_url('welcome/export_excel_stok') ?>" target="_blank">Export Excel</a>
 
 					</form>
 

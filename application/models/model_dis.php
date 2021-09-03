@@ -283,8 +283,9 @@ class Model_dis extends CI_Model
 	function getListPoByPo($noPo)
 	{
 		return $this->db->query("SELECT 
-		pembelian.kode_pembelian as no_po, pembelian.tanggal, pembelian.qty, pembelian.id_barang,
-		pemasok.nama_pemasok
+		pembelian.id, pembelian.kode_pembelian as no_po, pembelian.tanggal, pembelian.qty, pembelian.id_barang,
+		pemasok.nama_pemasok, pemasok.id_pemasok,
+		stok_barang.nama_barang, stok_barang.harga, stok_barang.satuan 
 		FROM `pembelian`
 		LEFT JOIN stok_barang ON pembelian.id_barang = stok_barang.id
 		LEFT JOIN pemasok ON stok_barang.pemasok_id = pemasok.id_pemasok
@@ -414,7 +415,7 @@ class Model_dis extends CI_Model
 	function getListPenjualanCari($cari)
 	{
 		return $this->db->query("SELECT 
-		COUNT(penjualan.id_barang) as total_barang, SUM(penjualan.qty) AS total_qty, penjualan.kode_penjualan, penjualan.tanggal,
+		COUNT(penjualan.id_barang) as total_barang, SUM(penjualan.qty) AS total_qty, penjualan.kode_penjualan, penjualan.tanggal, SUM(penjualan.qty * penjualan.harga) AS total_harga,
 		konsumen.nama
 		FROM `penjualan`
 		LEFT JOIN konsumen ON penjualan.id_konsumen = konsumen.id

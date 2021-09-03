@@ -160,8 +160,6 @@
 		let newArrayData;
 		let parsingDataOld = JSON.parse(oldData);
 
-		console.log(parsingDataOld);
-
 		if (parsingDataOld.length > 0) {
 			let htmlRender = '';
 			for (let index = 0; index < parsingDataOld.length; index++) {
@@ -308,7 +306,6 @@
 		}
 
 		// modal setup
-
 		var modal = document.getElementById("myModal");
 
 		// Get the button that opens the modal

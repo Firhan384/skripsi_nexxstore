@@ -467,6 +467,63 @@ class Welcome extends CI_Controller
 		}
 	}
 
+	function update_pembelian()
+	{
+		$data = $_POST['data'];
+		for ($i = 0; $i < count($data); $i++) {
+			// set data
+			$kode_penjualan = $_POST['data'][$i]['id_pembelian'];
+			$id_peng = $this->session->userdata('id_log');
+			$jml = $_POST['data'][$i]['jml'];
+
+			if ($_POST['data'][$i]['status'] == 'new') {
+				// simpan produk
+				$id_produk = $this->model_dis->insert_id([
+					'kode_barang' =>  $this->model_dis->getCodeBarang(),
+					'nama_barang' =>  $_POST['data'][$i]['nama_barang'],
+					'stok_barang' =>  $_POST['data'][$i]['jml'],
+					'satuan' =>  $_POST['data'][$i]['satuan'],
+					'harga' =>  $_POST['data'][$i]['harga'],
+					'pemasok_id' =>  $_POST['data'][$i]['pemasok_id'],
+					'id_user' =>  $id_peng,
+					'tanggal' =>  date('Y-m-d h:i:s'),
+				], 'stok_barang');
+
+				// simpan pembelian
+				$datas = array('kode_pembelian' => $kode_penjualan, 'id_barang' =>
+				$id_produk, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_user' => $id_peng);
+				$this->model_dis->tambah_user('pembelian', $datas);
+			} else {
+				// update pembelian
+				$datas = array('kode_pembelian' => $kode_penjualan, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_barang' => $_POST['data'][$i]['barang_id'], 'id_user' => $id_peng);
+
+				$this->model_dis->editData('pembelian', $datas, $_POST['data'][$i]['id']);
+
+				// update produk
+				$productData = $this->model_dis->getProductById($_POST['data'][$i]['barang_id'])->row();
+				if ($productData == NULL) {
+					echo json_encode([
+						'valid' => false,
+						'message' => "product tidak ada"
+					]);
+					exit(0);
+				}
+
+				$this->model_dis->editData('stok_barang', [
+					'nama_barang' => $_POST['data'][$i]['nama_barang'],
+					'stok_barang' => $_POST['data'][$i]['jml'],
+					'satuan' => $_POST['data'][$i]['satuan'],
+					'harga' => $_POST['data'][$i]['harga'],
+					'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
+					'id_user' => $id_peng,
+				], $productData->id);
+			}
+		}
+		echo json_encode([
+			'valid' => true,
+			'message' => "berhasil update pembelian"
+		]);
+	}
 	function update_penjualan()
 	{
 		$data = $_POST['data'];
@@ -505,7 +562,7 @@ class Welcome extends CI_Controller
 				], $productData->id);
 			} else {
 				$findData = $this->model_dis->getById('penjualan', $_POST['data'][$i]['id'])->row();
-				if($findData->qty > intval($jml)) {
+				if ($findData->qty > intval($jml)) {
 					$qty = $productData->stok_barang + ($findData->qty - intval($jml));
 				} else {
 					$qty = $productData->stok_barang - ($findData->qty - intval($jml));

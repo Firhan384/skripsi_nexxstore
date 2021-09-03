@@ -33,7 +33,7 @@
     </style>
 
     <center>
-        <h1>Export Penjualan</h1>
+        <h1>Purchase Order <?= $list[0]->kode_pembelian ?></h1>
     </center>
 
     <table>
@@ -53,6 +53,7 @@
         <tbody>
             <?php
             $no = 1;
+            $subTotal = 0;
             foreach ($list as $key => $value) :
             ?>
                 <tr>
@@ -67,10 +68,17 @@
                     <td><?= $value->tanggal; ?></td>
                 </tr>
             <?php
+                $subTotal += $value->total_harga;
                 $no++;
             endforeach;
             ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6">Sub Total</td>
+                <td><?= $subTotal ?></td>
+            </tr>
+        </tfoot>
     </table>
     <script type="text/javascript">
         window.print();

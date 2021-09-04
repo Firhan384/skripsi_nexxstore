@@ -56,7 +56,7 @@
 
 				<form action="<?php echo site_url('welcome/update_konsumen/' . $id) ?>" method="post">
 					Kode Konsumen<br />
-					<input type="text" name="kode_pemasok" value="<?php echo $kode_konsumen ?>" readonly/><br /><br />
+					<input type="text" name="kode_pemasok" value="<?php echo $kode_konsumen ?>"/><br /><br />
 					Nama Konsumen<br />
 					<input type="text" name="nm_pemasok" value="<?php echo $nama_konsumen ?>" style="width:40%;" required/><br /><br />
 					Alamat <br />

@@ -39,7 +39,7 @@
 				<br><br /><br />
 				<!-- <form action="<?php echo site_url('welcome/create_pembelian') ?>" method="post"> -->
 				Kode Pembelian<br />
-				<input type="text" name="id_pesanan" value="<?= $data[0]->no_po ?>" readonly /><br /><br />
+				<input type="text" name="id_pembelian" required /><br /><br />
 				Nama Barang <br />
 				<input type="text" name="nm_barang" style="width:50%;" required /><br /><br />
 				Harga<br />
@@ -71,6 +71,7 @@
 					<thead>
 						<tr>
 							<th>No</th>
+							<th>Kode Pembelian</th>
 							<th>Nama Barang</th>
 							<th>Harga</th>
 							<th>Jumlah</th>
@@ -82,7 +83,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="6">
+							<td colspan="7">
 								<button onclick="simpanData()">proses</button>
 							</td>
 						</tr>
@@ -102,6 +103,8 @@
 				<h2>Tambah Pesanan</h2>
 			</div>
 			<div class="modal-body">
+				Kode Pembelian <br />
+				<input type="text" name="id_pembelian_new" style="width:50%;" required /><br /><br />
 				Nama Barang <br />
 				<input type="text" name="nm_barang_new" style="width:50%;" required /><br /><br />
 				Harga<br />
@@ -151,6 +154,7 @@
 				const element = parsingDataOld[index];
 				htmlRender += `<tr id="pm_${index}">`;
 				htmlRender += `<td>${index+1}</td>`;
+				htmlRender += `<td>${element.no_po}</td>`;
 				htmlRender += `<td>${element.nama_barang}</td>`;
 				htmlRender += `<td>${element.harga}</td>`;
 				htmlRender += `<td>${element.qty}</td>`;
@@ -184,6 +188,7 @@
 			$("[name='satuan']").val(myData.satuan);
 			$("[name='pemasok_id']").val(myData.pemasok_id);
 			$("[name='id_edit']").val(id);
+			$("[name='id_pembelian']").val(myData.id_pembelian);
 		}
 
 		function simpanNew() {
@@ -192,7 +197,7 @@
 			const nm_barang_new = $("[name='nm_barang_new']").val();
 			const satuan = $("[name='satuan_new']").val();
 			const pemasok_id_new = $("[name='pemasok_id_new']").val();
-			const kode_penjualan = $("[name='id_pesanan']").val();
+			const kode_penjualan = $("[name='id_pembelian_new']").val();
 			
 			newArrayData.push({
 				_id: (newArrayData.length+1),
@@ -210,6 +215,7 @@
 				const element = newArrayData[index];
 				htmlRender += `<tr id="pm_${index}">`;
 				htmlRender += `<td>${index+1}</td>`;
+				htmlRender += `<td>${element.id_pembelian}</td>`;
 				htmlRender += `<td>${element.nama_barang}</td>`;
 				htmlRender += `<td>${element.harga}</td>`;
 				htmlRender += `<td>${element.jml}</td>`;
@@ -227,22 +233,26 @@
 			const nama_barang = $("[name='nm_barang']").val();
 			const satuan = $("[name='satuan']").val();
 			const pemasok_id = $("[name='pemasok_id']").val();
+			const id_pembelian = $("[name='id_pembelian']").val();
 
 			$(`#pm_${id_edit}`).each(function(index, element) {
+				// kode pmebleina
+				$(this).find("td").eq(1).text(id_pembelian);
 				// nama barang
-				$(this).find("td").eq(1).text(nama_barang);
+				$(this).find("td").eq(2).text(nama_barang);
 				// harga
-				$(this).find("td").eq(2).text(harga);
+				$(this).find("td").eq(3).text(harga);
 				// qty
-				$(this).find("td").eq(3).text(qty);
+				$(this).find("td").eq(4).text(qty);
 				// satuan
-				$(this).find("td").eq(4).text(satuan);
+				$(this).find("td").eq(5).text(satuan);
 			});
 			newArrayData[id_edit].jml = qty;
 			newArrayData[id_edit].harga = harga;
 			newArrayData[id_edit].nama_barang = nama_barang;
 			newArrayData[id_edit].satuan = satuan;
 			newArrayData[id_edit].pemasok_id = pemasok_id;
+			newArrayData[id_edit].id_pembelian = id_pembelian;
 		}
 
 		function hapus(idx) {

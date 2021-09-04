@@ -54,15 +54,15 @@
 
 				<form action="<?php echo site_url('welcome/update_brg/' . $id_barang) ?>" method="post">
 					Kode Barang<br />
-					<input type="text" name="id_brg" value="<?php echo $kode_barang ?>" readonly /><br /><br />
+					<input type="text" name="id_brg" value="<?php echo $kode_barang ?>" required /><br /><br />
 					Nama Barang<br />
-					<input type="text" name="nm_brg" value="<?php echo $nama_barang ?>" style="width:40%;" /><br /><br />
+					<input type="text" name="nm_brg" value="<?php echo $nama_barang ?>" style="width:40%;" required/><br /><br />
 					Stok <br />
-					<input type="number" name="stok_brg" value="<?php echo $stok_barang ?>" style="width:10%;" /><br /><br />
+					<input type="number" name="stok_brg" value="<?php echo $stok_barang ?>" style="width:10%;" /required><br /><br />
 					Satuan<br />
-					<input type="text" name="satuan_brg" value="<?php echo $satuan ?>" /><br /><br />
+					<input type="text" name="satuan_brg" value="<?php echo $satuan ?>" required/><br /><br />
 					Harga<br />
-					<input type="number" name="harga" value="<?php echo $dataEdit->harga ?>" /><br /><br />
+					<input type="number" name="harga" value="<?php echo $dataEdit->harga ?>" required/><br /><br />
 					<select name="pemasok_id" style="width: 30%;">
 						<option value="0" disabled>pilih supllier</option>
 						<?php

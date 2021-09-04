@@ -42,7 +42,7 @@
                 <form action="<?php echo site_url('welcome/create_retur') ?>" method="post">
                     <input type="hidden" name="penjualan_id">
                     Kode Retur<br />
-                    <input type="text" name="kode_retur" value="<?= $code ?>" readonly /><br /><br />
+                    <input type="text" name="kode_retur" required/><br /><br />
                     Kode Penjualan<br />
                     <select name="id_penjualan" id="" style="width: 20%;" onchange="getVal(this)">
                         <option value="" selected disabled>pilih kode penjualan</option>

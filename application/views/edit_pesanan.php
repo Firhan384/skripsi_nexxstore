@@ -42,7 +42,7 @@
 				<input type="hidden" name="nama_barang">
 				<input type="hidden" name="id_edit">
 				Kode Pesanan<br />
-				<input type="text" name="id_pesanan" value="<?= $data[0]['kode_penjualan'] ?>" readonly /><br /><br />
+				<input type="text" name="id_pesanan" required/><br /><br />
 				Nama Barang<br />
 				<select name="barang_id" style="width: 30%;" onchange="changeProduct(this)">
 					<option value="0" selected disabled>pilih barang</option>
@@ -80,6 +80,7 @@
 					<thead>
 						<tr>
 							<th>No</th>
+							<th>Kode Pesanan</th>
 							<th>Nama Barang</th>
 							<th>Harga</th>
 							<th>Jumlah</th>
@@ -91,7 +92,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="6">
+							<td colspan="7">
 								<button onclick="simpanData()">proses</button>
 							</td>
 						</tr>
@@ -113,6 +114,8 @@
 			</div>
 			<div class="modal-body">
 				<input type="hidden" name="nama_barang_new">
+				Kode Pesanan<br />
+				<input type="text" name="id_pesanan_new" required/><br /><br />
 				Nama Barang<br />
 				<select name="barang_new_id" style="width: 30%;" onchange="changeProduct(this)">
 					<option value="0" selected disabled>pilih barang</option>
@@ -166,6 +169,7 @@
 				const element = parsingDataOld[index];
 				htmlRender += `<tr id="pm_${index}">`;
 				htmlRender += `<td>${index+1}</td>`;
+				htmlRender += `<td>${element.kode_penjualan}</td>`;
 				htmlRender += `<td>${element.nama_barang}</td>`;
 				htmlRender += `<td>${element.harga}</td>`;
 				htmlRender += `<td>${element.qty}</td>`;
@@ -193,6 +197,7 @@
 		function edit(id) {
 			status = 'update';
 			const myData = newArrayData[id];
+			$("[name='id_pesanan']").val(myData.id_pesanan);
 			$("[name='barang_id']").val(myData.barang_id);
 			$("[name='jml']").val(myData.jml);
 			$("[name='harga']").val(myData.harga);
@@ -221,7 +226,7 @@
 			const nama_barang = $("[name='nama_barang_new']").val();
 			const satuan = $("[name='satuan_new']").val();
 			const konsumen_id = $("[name='konsumen_new_id']").val();
-			const kode_penjualan = $("[name='id_pesanan']").val();
+			const kode_penjualan = $("[name='id_pesanan_new']").val();
 			
 			newArrayData.push({
 				_id: (newArrayData.length+1),
@@ -240,6 +245,7 @@
 				const element = newArrayData[index];
 				htmlRender += `<tr id="pm_${index}">`;
 				htmlRender += `<td>${index+1}</td>`;
+				htmlRender += `<td>${element.id_pesanan}</td>`;
 				htmlRender += `<td>${element.nama_barang}</td>`;
 				htmlRender += `<td>${element.harga}</td>`;
 				htmlRender += `<td>${element.jml}</td>`;
@@ -251,6 +257,7 @@
 		}
 
 		function simpan() {
+			const id_pesanan = $("[name='id_pesanan']").val();
 			const id_edit = $("[name='id_edit']").val();
 			const barang_id = $("[name='barang_id']").val();
 			const jml = $("[name='jml']").val();
@@ -260,16 +267,19 @@
 			const konsumen_id = $("[name='konsumen_id']").val();
 
 			$(`#pm_${id_edit}`).each(function(index, element) {
+				// kode pesanan
+				$(this).find("td").eq(1).text(id_pesanan);
 				// nama barang
-				$(this).find("td").eq(1).text(nama_barang);
+				$(this).find("td").eq(2).text(nama_barang);
 				// harga
-				$(this).find("td").eq(2).text(harga);
+				$(this).find("td").eq(3).text(harga);
 				// jumlah
-				$(this).find("td").eq(3).text(jml);
+				$(this).find("td").eq(4).text(jml);
 				// satuan
-				$(this).find("td").eq(4).text(satuan);
+				$(this).find("td").eq(5).text(satuan);
 			});
 
+			newArrayData[id_edit].id_pesanan = id_pesanan;
 			newArrayData[id_edit].barang_id = barang_id;
 			newArrayData[id_edit].jml = jml;
 			newArrayData[id_edit].harga = harga;

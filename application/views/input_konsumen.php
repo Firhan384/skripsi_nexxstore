@@ -41,7 +41,7 @@
 
                 <form action="<?php echo site_url('welcome/create_konsumen') ?>" method="post">
                     Kode Konsumen<br />
-                    <input type="text" name="kode_konsumen" value="<?= $code ?>" readonly/><br /><br />
+                    <input type="text" name="kode_konsumen"/><br /><br />
                     Nama Konsumen<br />
                     <input type="text" name="nm_pemasok" style="width:40%;" required/><br /><br />
                     Alamat <br />

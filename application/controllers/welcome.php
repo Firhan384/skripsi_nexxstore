@@ -45,7 +45,6 @@ class Welcome extends CI_Controller
 
 	public function input_barang()
 	{
-		$data['code'] = $this->model_dis->getCodeBarang();
 		$data['supplier'] = $this->model_dis->getUser('pemasok');
 		$this->load->view('input_barang', $data);
 	}
@@ -259,14 +258,12 @@ class Welcome extends CI_Controller
 
 	public function input_konsumen()
 	{
-		$data['code'] =  $this->model_dis->getCodeCustomer();
-		$this->load->view('input_konsumen', $data);
+		$this->load->view('input_konsumen');
 	}
 
 	public function input_pesanan()
 	{
 		$data['stockAvailable'] =  $this->model_dis->stockAvailable()->result_array();
-		$data['code'] = $this->model_dis->getGenerateCodeInv();
 		$data['konsumen'] = $this->model_dis->getUser('konsumen');
 		$this->load->view('input_pesanan', $data);
 	}
@@ -645,7 +642,7 @@ class Welcome extends CI_Controller
 			$this->model_dis->tambah_user('pembelian', [
 				'id_barang' => $productId,
 				'qty' => $_POST['data'][$i]['qty'],
-				'kode_pembelian' => $this->model_dis->getGenerateCodePo(),
+				'kode_pembelian' => $_POST['data'][$i]['id_pesanan'],
 				'tanggal' => date('Y-m-d h:i:s'),
 			]);
 		}

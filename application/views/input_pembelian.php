@@ -37,7 +37,7 @@
 				<br><br /><br />
 				<!-- <form action="<?php echo site_url('welcome/create_pembelian') ?>" method="post"> -->
 				Kode Pembelian<br />
-				<input type="text" name="id_pesanan" value="<?= $code ?>" readonly /><br /><br />
+				<input type="text" name="id_pesanan" require/><br /><br />
 				Nama Barang <br />
 				<input type="text" name="nm_barang" style="width:50%;" required /><br /><br />
 				Harga<br />
@@ -69,6 +69,7 @@
 					<thead>
 						<tr>
 							<th>No</th>
+							<th>Kode Pembelian</th>
 							<th>Nama Barang</th>
 							<th>Harga</th>
 							<th>Jumlah</th>
@@ -98,6 +99,7 @@
 		let data = [];
 
 		function simpan() {
+			const id_pesanan = $("[name='id_pesanan']").val();
 			const nm_barang = $("[name='nm_barang']").val();
 			const harga = $("[name='harga']").val();
 			const qty = $("[name='qty']").val();
@@ -109,7 +111,8 @@
 				harga,
 				qty,
 				satuan,
-				pemasok_id
+				pemasok_id,
+				id_pesanan
 			});
 
 			if (data.length > 0) {
@@ -118,6 +121,7 @@
 					const element = data[index];
 					htmlRender += `<tr id="pm_${index}">`;
 					htmlRender += `<td>${index+1}</td>`;
+					htmlRender += `<td>${element.id_pesanan}</td>`;
 					htmlRender += `<td>${element.nm_barang}</td>`;
 					htmlRender += `<td>${element.harga}</td>`;
 					htmlRender += `<td>${element.qty}</td>`;

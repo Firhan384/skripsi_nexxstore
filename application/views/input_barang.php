@@ -41,7 +41,7 @@
 
 				<form action="<?php echo site_url('welcome/input_brg') ?>" method="post">
 					Kode Barang<br />
-					<input type="text" name="id_brg" value="<?= $code ?>" readonly/><br /><br />
+					<input type="text" name="id_brg" required/><br /><br />
 					Nama Barang<br />
 					<input type="text" name="nm_brg" style="width:40%;" required/><br /><br />
 					Stok <br />

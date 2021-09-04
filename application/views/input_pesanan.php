@@ -42,7 +42,7 @@
 				<!-- <form action="<?php echo site_url('welcome/input_psn') ?>" method="post"> -->
 					<input type="hidden" name="nama_barang">
 					Kode Pesanan<br />
-					<input type="text" name="id_pesanan" value="<?= $code ?>" readonly /><br /><br />
+					<input type="text" name="id_pesanan" required /><br /><br />
 					Nama Barang<br />
 					<select name="barang_id" style="width: 30%;" onchange="changeProduct(this)">
 						<option value="0" selected disabled>pilih barang</option>
@@ -80,6 +80,7 @@
 					<thead>
 						<tr>
 							<th>No</th>
+							<th>Kode Pesanan</th>
 							<th>Nama Barang</th>
 							<th>Harga</th>
 							<th>Jumlah</th>
@@ -91,7 +92,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="6">
+							<td colspan="7">
 								<button onclick="simpanData()">proses</button>
 							</td>
 						</tr>
@@ -142,6 +143,7 @@
 					const element = data[index];
 					htmlRender += `<tr id="pm_${index}">`;
 					htmlRender += `<td>${index+1}</td>`;
+					htmlRender += `<td>${element.id_pesanan}</td>`;
 					htmlRender += `<td>${element.nama_barang}</td>`;
 					htmlRender += `<td>${element.harga}</td>`;
 					htmlRender += `<td>${element.jml}</td>`;

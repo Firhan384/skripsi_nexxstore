@@ -206,9 +206,9 @@
 			const pemasok_id_new = $("[name='pemasok_id_new']").val();
 			const kode_penjualan = $("[name='id_pembelian_new']").val();
 			const kode_barang_new = $("[name='kode_barang_new']").val();
-			
+
 			newArrayData.push({
-				_id: (newArrayData.length+1),
+				_id: (newArrayData.length + 1),
 				id_pembelian: kode_penjualan,
 				jml: jml,
 				harga: harga,
@@ -222,16 +222,18 @@
 			let htmlRender = '';
 			for (let index = 0; index < newArrayData.length; index++) {
 				const element = newArrayData[index];
-				htmlRender += `<tr id="pm_${index}">`;
-				htmlRender += `<td>${index+1}</td>`;
-				htmlRender += `<td>${element.id_pembelian}</td>`;
-				htmlRender += `<td>${element.kode_barang}</td>`;
-				htmlRender += `<td>${element.nama_barang}</td>`;
-				htmlRender += `<td>${element.harga}</td>`;
-				htmlRender += `<td>${element.jml}</td>`;
-				htmlRender += `<td>${element.satuan}</td>`;
-				htmlRender += `<td><button onclick="hapus(${index})">hapus</button> || <button onclick="edit(${index})">edit</button></td>`;
-				htmlRender += '</tr>';
+				if (element.status == 'new' || element.status == 'old') {
+					htmlRender += `<tr id="pm_${index}">`;
+					htmlRender += `<td>${index+1}</td>`;
+					htmlRender += `<td>${element.id_pembelian}</td>`;
+					htmlRender += `<td>${element.kode_barang}</td>`;
+					htmlRender += `<td>${element.nama_barang}</td>`;
+					htmlRender += `<td>${element.harga}</td>`;
+					htmlRender += `<td>${element.jml}</td>`;
+					htmlRender += `<td>${element.satuan}</td>`;
+					htmlRender += `<td><button onclick="hapus(${index})">hapus</button> || <button onclick="edit(${index})">edit</button></td>`;
+					htmlRender += '</tr>';
+				}
 			}
 			$("#result").empty().html(htmlRender);
 		}
@@ -271,12 +273,34 @@
 
 		function hapus(idx) {
 			$(`#pm_${idx}`).remove();
-			newArrayData.splice(idx, 1);
+			if(newArrayData[idx].status == 'old') {
+				newArrayData[idx].status = 'deleted';
+			} else {
+				newArrayData[idx].status = 'trash';
+			}
+
+			let htmlRender = '';
+			for (let index = 0; index < newArrayData.length; index++) {
+				const element = newArrayData[index];
+				if (element.status == 'new' || element.status == 'old') {
+					htmlRender += `<tr id="pm_${index}">`;
+					htmlRender += `<td>${index+1}</td>`;
+					htmlRender += `<td>${element.id_pembelian}</td>`;
+					htmlRender += `<td>${element.kode_barang}</td>`;
+					htmlRender += `<td>${element.nama_barang}</td>`;
+					htmlRender += `<td>${element.harga}</td>`;
+					htmlRender += `<td>${element.jml}</td>`;
+					htmlRender += `<td>${element.satuan}</td>`;
+					htmlRender += `<td><button onclick="hapus(${index})">hapus</button> || <button onclick="edit(${index})">edit</button></td>`;
+					htmlRender += '</tr>';
+				}
+			}
+			$("#result").empty().html(htmlRender);
+			console.log(newArrayData);
 		}
 
-		function simpanData()
-		{
-			if(newArrayData.length > 0) {
+		function simpanData() {
+			if (newArrayData.length > 0) {
 				$.ajax({
 					url: "<?= site_url('welcome/update_pembelian') ?>",
 					dataType: 'json',
@@ -285,7 +309,7 @@
 						data: newArrayData
 					},
 					success: function(data, textStatus, jqXHR) {
-						if(data.valid) {
+						if (data.valid) {
 							alert(data.message);
 							window.location.reload();
 						}

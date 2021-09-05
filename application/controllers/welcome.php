@@ -490,7 +490,7 @@ class Welcome extends CI_Controller
 				$datas = array('kode_pembelian' => $kode_penjualan, 'id_barang' =>
 				$id_produk, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_user' => $id_peng);
 				$this->model_dis->tambah_user('pembelian', $datas);
-			} else {
+			} else if ($_POST['data'][$i]['status'] == 'old') {
 				// update pembelian
 				$datas = array('kode_pembelian' => $kode_penjualan, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_barang' => $_POST['data'][$i]['barang_id'], 'id_user' => $id_peng);
 
@@ -515,6 +515,9 @@ class Welcome extends CI_Controller
 					'id_user' => $id_peng,
 					'kode_barang' =>  $_POST['data'][$i]['kode_barang'],
 				], $productData->id);
+			} else if ($_POST['data'][$i]['status'] == 'deleted') {
+				$this->model_dis->hapusData('pembelian', $_POST['data'][$i]['id']);
+				$this->model_dis->hapusData('stok_barang', $_POST['data'][$i]['barang_id']);
 			}
 		}
 		echo json_encode([
@@ -558,7 +561,7 @@ class Welcome extends CI_Controller
 				$this->model_dis->editData('stok_barang', [
 					'stok_barang' => ($productData->stok_barang - intval($jml))
 				], $productData->id);
-			} else {
+			} else if ($_POST['data'][$i]['status'] == 'old') {
 				$findData = $this->model_dis->getById('penjualan', $_POST['data'][$i]['id'])->row();
 				if ($findData->qty > intval($jml)) {
 					$qty = $productData->stok_barang + ($findData->qty - intval($jml));
@@ -575,6 +578,14 @@ class Welcome extends CI_Controller
 				$this->model_dis->editData('stok_barang', [
 					'stok_barang' => $qty
 				], $productData->id);
+			} else if ($_POST['data'][$i]['status'] == 'deleted') {
+				
+				$findData = $this->model_dis->getById('penjualan', $_POST['data'][$i]['id'])->row();
+				$this->model_dis->editData('stok_barang', [
+					'stok_barang' => ($findData->qty + $productData->stok_barang)
+				], $productData->id);
+
+				$this->model_dis->hapusData('penjualan', $_POST['data'][$i]['id']);
 			}
 		}
 

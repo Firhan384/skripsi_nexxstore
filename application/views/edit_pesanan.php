@@ -243,15 +243,17 @@
 			let htmlRender = '';
 			for (let index = 0; index < newArrayData.length; index++) {
 				const element = newArrayData[index];
-				htmlRender += `<tr id="pm_${index}">`;
-				htmlRender += `<td>${index+1}</td>`;
-				htmlRender += `<td>${element.id_pesanan}</td>`;
-				htmlRender += `<td>${element.nama_barang}</td>`;
-				htmlRender += `<td>${element.harga}</td>`;
-				htmlRender += `<td>${element.jml}</td>`;
-				htmlRender += `<td>${element.satuan}</td>`;
-				htmlRender += `<td><button onclick="hapus(${index})">hapus</button> || <button onclick="edit(${index})">edit</button></td>`;
-				htmlRender += '</tr>';
+				if(element.status == 'old' || element.status == 'new') {
+					htmlRender += `<tr id="pm_${index}">`;
+					htmlRender += `<td>${index+1}</td>`;
+					htmlRender += `<td>${element.id_pesanan}</td>`;
+					htmlRender += `<td>${element.nama_barang}</td>`;
+					htmlRender += `<td>${element.harga}</td>`;
+					htmlRender += `<td>${element.jml}</td>`;
+					htmlRender += `<td>${element.satuan}</td>`;
+					htmlRender += `<td><button onclick="hapus(${index})">hapus</button> || <button onclick="edit(${index})">edit</button></td>`;
+					htmlRender += '</tr>';
+				}
 			}
 			$("#result").empty().html(htmlRender);
 		}
@@ -312,7 +314,27 @@
 
 		function hapus(idx) {
 			$(`#pm_${idx}`).remove();
-			newArrayData.splice(idx, 1);
+			if(newArrayData[idx].status == 'old') {
+				newArrayData[idx].status = 'deleted';
+			} else {
+				newArrayData[idx].status = 'trash';
+			}
+			let htmlRender = '';
+			for (let index = 0; index < newArrayData.length; index++) {
+				const element = newArrayData[index];
+				if(element.status == 'old' || element.status == 'new') {
+					htmlRender += `<tr id="pm_${index}">`;
+					htmlRender += `<td>${index+1}</td>`;
+					htmlRender += `<td>${element.id_pesanan}</td>`;
+					htmlRender += `<td>${element.nama_barang}</td>`;
+					htmlRender += `<td>${element.harga}</td>`;
+					htmlRender += `<td>${element.jml}</td>`;
+					htmlRender += `<td>${element.satuan}</td>`;
+					htmlRender += `<td><button onclick="hapus(${index})">hapus</button> || <button onclick="edit(${index})">edit</button></td>`;
+					htmlRender += '</tr>';
+				}
+			}
+			$("#result").empty().html(htmlRender);
 		}
 
 		// modal setup

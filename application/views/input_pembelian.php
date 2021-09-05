@@ -32,12 +32,14 @@
 		?>
 
 		<div class="bag-menu">
-			<div class="isi-barang" style="margin-bottom: 100px;">
+			<div class="isi-barang" style="margin-bottom: 120px;">
 				<b>INPUT PEMBELIAN</b>
 				<br><br /><br />
 				<!-- <form action="<?php echo site_url('welcome/create_pembelian') ?>" method="post"> -->
 				Kode Pembelian<br />
 				<input type="text" name="id_pesanan" require/><br /><br />
+				Kode Barang <br />
+				<input type="text" name="kode_barang" style="width:50%;" required /><br /><br />
 				Nama Barang <br />
 				<input type="text" name="nm_barang" style="width:50%;" required /><br /><br />
 				Harga<br />
@@ -70,6 +72,7 @@
 						<tr>
 							<th>No</th>
 							<th>Kode Pembelian</th>
+							<th>Kode Barang</th>
 							<th>Nama Barang</th>
 							<th>Harga</th>
 							<th>Jumlah</th>
@@ -81,7 +84,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="6">
+							<td colspan="8">
 								<button onclick="simpanData()">proses</button>
 							</td>
 						</tr>
@@ -103,6 +106,7 @@
 			const nm_barang = $("[name='nm_barang']").val();
 			const harga = $("[name='harga']").val();
 			const qty = $("[name='qty']").val();
+			const kode_barang = $("[name='kode_barang']").val();
 			const satuan = $("[name='satuan']").val();
 			const pemasok_id = $("[name='pemasok_id']").val();
 
@@ -112,7 +116,8 @@
 				qty,
 				satuan,
 				pemasok_id,
-				id_pesanan
+				id_pesanan,
+				kode_barang
 			});
 
 			if (data.length > 0) {
@@ -122,6 +127,7 @@
 					htmlRender += `<tr id="pm_${index}">`;
 					htmlRender += `<td>${index+1}</td>`;
 					htmlRender += `<td>${element.id_pesanan}</td>`;
+					htmlRender += `<td>${element.kode_barang}</td>`;
 					htmlRender += `<td>${element.nm_barang}</td>`;
 					htmlRender += `<td>${element.harga}</td>`;
 					htmlRender += `<td>${element.qty}</td>`;

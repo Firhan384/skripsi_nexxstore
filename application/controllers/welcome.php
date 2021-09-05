@@ -476,7 +476,7 @@ class Welcome extends CI_Controller
 			if ($_POST['data'][$i]['status'] == 'new') {
 				// simpan produk
 				$id_produk = $this->model_dis->insert_id([
-					'kode_barang' =>  $this->model_dis->getCodeBarang(),
+					'kode_barang' =>  $_POST['data'][$i]['kode_barang'],
 					'nama_barang' =>  $_POST['data'][$i]['nama_barang'],
 					'stok_barang' =>  $_POST['data'][$i]['jml'],
 					'satuan' =>  $_POST['data'][$i]['satuan'],
@@ -513,6 +513,7 @@ class Welcome extends CI_Controller
 					'harga' => $_POST['data'][$i]['harga'],
 					'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
 					'id_user' => $id_peng,
+					'kode_barang' =>  $_POST['data'][$i]['kode_barang'],
 				], $productData->id);
 			}
 		}
@@ -629,7 +630,7 @@ class Welcome extends CI_Controller
 		for ($i = 0; $i < count($data); $i++) {
 			// insert product
 			$productId = $this->model_dis->insert_id([
-				'kode_barang' => $this->model_dis->getCodeBarang(),
+				'kode_barang' => $_POST['data'][$i]['kode_barang'],
 				'id_user' => $this->session->userdata('id_log'),
 				'nama_barang' => $_POST['data'][$i]['nm_barang'],
 				'stok_barang' => $_POST['data'][$i]['qty'],

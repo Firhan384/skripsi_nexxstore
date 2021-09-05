@@ -32,7 +32,7 @@
 		?>
 
 		<div class="bag-menu">
-			<div class="isi-barang" style="margin-bottom: 100px;">
+			<div class="isi-barang" style="margin-bottom: 150px;">
 				<input type="hidden" name="id_edit">
 				<b>INPUT PEMBELIAN</b><br>
 				<button id="myBtn">TAMBAH BARANG</button>
@@ -40,6 +40,8 @@
 				<!-- <form action="<?php echo site_url('welcome/create_pembelian') ?>" method="post"> -->
 				Kode Pembelian<br />
 				<input type="text" name="id_pembelian" required /><br /><br />
+				Kode Barang<br />
+				<input type="text" name="kode_barang" required /><br /><br />
 				Nama Barang <br />
 				<input type="text" name="nm_barang" style="width:50%;" required /><br /><br />
 				Harga<br />
@@ -72,6 +74,7 @@
 						<tr>
 							<th>No</th>
 							<th>Kode Pembelian</th>
+							<th>Kode Barang</th>
 							<th>Nama Barang</th>
 							<th>Harga</th>
 							<th>Jumlah</th>
@@ -83,7 +86,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="7">
+							<td colspan="8">
 								<button onclick="simpanData()">proses</button>
 							</td>
 						</tr>
@@ -147,7 +150,6 @@
 			oldDataSaved = [];
 		let newArrayData;
 		let parsingDataOld = JSON.parse(oldData);
-		console.log(parsingDataOld);
 		if (parsingDataOld.length > 0) {
 			let htmlRender = '';
 			for (let index = 0; index < parsingDataOld.length; index++) {
@@ -155,6 +157,7 @@
 				htmlRender += `<tr id="pm_${index}">`;
 				htmlRender += `<td>${index+1}</td>`;
 				htmlRender += `<td>${element.no_po}</td>`;
+				htmlRender += `<td>${element.kode_barang}</td>`;
 				htmlRender += `<td>${element.nama_barang}</td>`;
 				htmlRender += `<td>${element.harga}</td>`;
 				htmlRender += `<td>${element.qty}</td>`;
@@ -167,6 +170,7 @@
 					_id: index,
 					id_pembelian: element.no_po,
 					barang_id: element.id_barang,
+					kode_barang: element.kode_barang,
 					jml: element.qty,
 					harga: element.harga,
 					nama_barang: element.nama_barang,
@@ -189,6 +193,7 @@
 			$("[name='pemasok_id']").val(myData.pemasok_id);
 			$("[name='id_edit']").val(id);
 			$("[name='id_pembelian']").val(myData.id_pembelian);
+			$("[name='kode_barang']").val(myData.kode_barang);
 		}
 
 		function simpanNew() {
@@ -198,6 +203,7 @@
 			const satuan = $("[name='satuan_new']").val();
 			const pemasok_id_new = $("[name='pemasok_id_new']").val();
 			const kode_penjualan = $("[name='id_pembelian_new']").val();
+			const kode_barang_new = $("[name='kode_barang_new']").val();
 			
 			newArrayData.push({
 				_id: (newArrayData.length+1),
@@ -207,6 +213,7 @@
 				nama_barang: nm_barang_new,
 				satuan: satuan,
 				pemasok_id: pemasok_id_new,
+				kode_barang: kode_barang_new,
 				status: 'new'
 			});
 
@@ -216,6 +223,7 @@
 				htmlRender += `<tr id="pm_${index}">`;
 				htmlRender += `<td>${index+1}</td>`;
 				htmlRender += `<td>${element.id_pembelian}</td>`;
+				htmlRender += `<td>${element.kode_barang}</td>`;
 				htmlRender += `<td>${element.nama_barang}</td>`;
 				htmlRender += `<td>${element.harga}</td>`;
 				htmlRender += `<td>${element.jml}</td>`;
@@ -230,6 +238,7 @@
 			const id_edit = $("[name='id_edit']").val();
 			const qty = $("[name='qty']").val();
 			const harga = $("[name='harga']").val();
+			const kode_barang = $("[name='kode_barang']").val();
 			const nama_barang = $("[name='nm_barang']").val();
 			const satuan = $("[name='satuan']").val();
 			const pemasok_id = $("[name='pemasok_id']").val();
@@ -238,16 +247,19 @@
 			$(`#pm_${id_edit}`).each(function(index, element) {
 				// kode pmebleina
 				$(this).find("td").eq(1).text(id_pembelian);
+				// kode barang
+				$(this).find("td").eq(2).text(kode_barang);
 				// nama barang
-				$(this).find("td").eq(2).text(nama_barang);
+				$(this).find("td").eq(3).text(nama_barang);
 				// harga
-				$(this).find("td").eq(3).text(harga);
+				$(this).find("td").eq(4).text(harga);
 				// qty
-				$(this).find("td").eq(4).text(qty);
+				$(this).find("td").eq(5).text(qty);
 				// satuan
-				$(this).find("td").eq(5).text(satuan);
+				$(this).find("td").eq(6).text(satuan);
 			});
 			newArrayData[id_edit].jml = qty;
+			newArrayData[id_edit].kode_barang = kode_barang;
 			newArrayData[id_edit].harga = harga;
 			newArrayData[id_edit].nama_barang = nama_barang;
 			newArrayData[id_edit].satuan = satuan;
@@ -264,14 +276,17 @@
 		{
 			if(newArrayData.length > 0) {
 				$.ajax({
-					dataType: 'json',
 					url: "<?= site_url('welcome/update_pembelian') ?>",
+					dataType: 'json',
 					method: 'post',
 					data: {
 						data: newArrayData
 					},
 					success: function(data, textStatus, jqXHR) {
-					
+						if(data.valid) {
+							alert(data.message);
+							window.location.reload();
+						}
 					}
 				});
 			}

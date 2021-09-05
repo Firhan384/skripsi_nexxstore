@@ -287,7 +287,7 @@ class Model_dis extends CI_Model
 		return $this->db->query("SELECT 
 		pembelian.id, pembelian.kode_pembelian as no_po, pembelian.tanggal, pembelian.qty, pembelian.id_barang,
 		pemasok.nama_pemasok, pemasok.id_pemasok,
-		stok_barang.nama_barang, stok_barang.harga, stok_barang.satuan 
+		stok_barang.nama_barang, stok_barang.harga, stok_barang.satuan, stok_barang.kode_barang
 		FROM `pembelian`
 		LEFT JOIN stok_barang ON pembelian.id_barang = stok_barang.id
 		LEFT JOIN pemasok ON stok_barang.pemasok_id = pemasok.id_pemasok

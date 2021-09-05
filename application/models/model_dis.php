@@ -95,6 +95,8 @@ class Model_dis extends CI_Model
 	{
 		if ($table_name == 'konsumen') {
 			$whereData = 'id';
+		} else if($table_name == 'pemasok'){
+			$whereData = 'id_pemasok';
 		} else {
 			$whereData = 'id';
 		}

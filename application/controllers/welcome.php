@@ -284,7 +284,7 @@ class Welcome extends CI_Controller
 		$email = $_POST['email'];
 		$no_telp = $_POST['no_telp'];
 		$data = array('kode_konsumen' => $id_pemasok, 'user_id' => $id_peng, 'nama' =>
-		$nm_pemasok, 'alamat' => $almt, 'email' => $email, 'no_tlp' => $no_telp);
+		$nm_pemasok, 'alamat' => $almt, 'email' => $email, 'no_tlp' => $no_telp, 'tanggal' => date('Y-m-d h:i:s'));
 		$insert = $this->model_dis->tambah_user('konsumen', $data);
 		if ($insert > 0) {
 			redirect('welcome/hal_konsumen');
@@ -636,7 +636,8 @@ class Welcome extends CI_Controller
 				'stok_barang' => $_POST['data'][$i]['qty'],
 				'satuan' => $_POST['data'][$i]['satuan'],
 				'harga' => $_POST['data'][$i]['harga'],
-				'pemasok_id' => $_POST['data'][$i]['pemasok_id']
+				'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
+				'tanggal' => date('Y-m-d h:i:s')
 			], 'stok_barang');
 
 			// insert ke pembelian
@@ -644,6 +645,7 @@ class Welcome extends CI_Controller
 				'id_barang' => $productId,
 				'qty' => $_POST['data'][$i]['qty'],
 				'kode_pembelian' => $_POST['data'][$i]['id_pesanan'],
+				'id_user' => $this->session->userdata('id_log'),
 				'tanggal' => date('Y-m-d h:i:s'),
 			]);
 		}

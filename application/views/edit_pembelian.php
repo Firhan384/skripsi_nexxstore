@@ -108,6 +108,8 @@
 			<div class="modal-body">
 				Kode Pembelian <br />
 				<input type="text" name="id_pembelian_new" style="width:50%;" required /><br /><br />
+				Kode Barang <br />
+				<input type="text" name="kode_barang_new" style="width:50%;" required /><br /><br />
 				Nama Barang <br />
 				<input type="text" name="nm_barang_new" style="width:50%;" required /><br /><br />
 				Harga<br />

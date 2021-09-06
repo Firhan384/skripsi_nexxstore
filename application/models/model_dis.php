@@ -158,6 +158,13 @@ class Model_dis extends CI_Model
 		GROUP BY penjualan.kode_penjualan");
 	}
 
+	public function export_pengiriman()
+	{
+		$this->db->select("*");
+		$this->db->from('pengiriman');
+		return $this->db->get();
+	}
+
 	public function export_konsumen()
 	{
 		$this->db->select("*");
@@ -174,8 +181,8 @@ class Model_dis extends CI_Model
 	public function export_stok()
 	{
 		return $this->db->query("SELECT 
-		stok_barang.id, stok_barang.nama_barang, stok_barang.stok_barang, stok_barang.satuan, stok_barang.harga,
-		pemasok.nama_pemasok
+		stok_barang.id_user, stok_barang.id, stok_barang.nama_barang, stok_barang.stok_barang, stok_barang.satuan, stok_barang.harga,
+		pemasok.nama_pemasok, stok_barang.kode_barang
 		FROM `stok_barang`
 		LEFT JOIN pemasok ON stok_barang.pemasok_id = pemasok.id_pemasok");
 	}
@@ -259,7 +266,7 @@ class Model_dis extends CI_Model
 	{
 		return $this->db->query("SELECT 
 		stok_barang.id, stok_barang.nama_barang, stok_barang.stok_barang, stok_barang.satuan, stok_barang.harga,
-		pemasok.nama_pemasok, stok_barang.kode_barang
+		pemasok.nama_pemasok, stok_barang.kode_barang, stok_barang.expired
 		FROM `stok_barang`
 		LEFT JOIN pemasok ON stok_barang.pemasok_id = pemasok.id_pemasok")->result_array();
 	}
@@ -299,10 +306,12 @@ class Model_dis extends CI_Model
 	{
 		return $this->db->query("
 		SELECT
-		penjualan.kode_penjualan, penjualan.id,
-		stok_barang.nama_barang
+		penjualan.kode_penjualan, penjualan.id, penjualan.qty,
+		stok_barang.nama_barang, stok_barang.harga, stok_barang.id as barang_id,
+		konsumen.id as id_konsumen
 		FROM `penjualan`
 		LEFT JOIN stok_barang ON penjualan.id_barang = stok_barang.id
+		left join konsumen on penjualan.id_konsumen = konsumen.id
 		WHERE penjualan.kode_penjualan='$po'");
 	}
 
@@ -346,7 +355,7 @@ class Model_dis extends CI_Model
 		return $this->db->query("
 			SELECT 
 			retur.id, retur.kode_retur, retur.penjualan_id, retur.qty, retur.deskripsi,
-			stok_barang.nama_barang
+			stok_barang.nama_barang, stok_barang.id as barang_id, stok_barang.harga
 			FROM `retur`
 			LEFT JOIN penjualan ON retur.penjualan_id = penjualan.id
 			LEFT JOIN stok_barang ON penjualan.id_barang = stok_barang.id

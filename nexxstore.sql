@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 01, 2021 at 11:39 PM
+-- Generation Time: Sep 06, 2021 at 10:17 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -43,7 +43,8 @@ CREATE TABLE `konsumen` (
 --
 
 INSERT INTO `konsumen` (`id`, `user_id`, `kode_konsumen`, `nama`, `alamat`, `email`, `no_tlp`, `tanggal`) VALUES
-(2, 0, 'CSM-612bcfa448847-0001', 'azis', 'kp baru', 'admin@yometu.com', '081919446454', '2021-09-01 00:06:30');
+(2, 0, 'CSM-612bcfa448847-0001', 'azis', 'kp baru', 'admin@yometu.com', '081919446454', '2021-09-01 00:06:30'),
+(3, 0, 'CSM-61323ecc806ea-0002', 'azat', 'kp baru', 'z_umaya@yahoo.com', '081919446454', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -66,8 +67,7 @@ CREATE TABLE `pemasok` (
 --
 
 INSERT INTO `pemasok` (`id_pemasok`, `id_user`, `nama_pemasok`, `alamat`, `email`, `no_telp`, `tanggal`) VALUES
-(200110, 1, 'PT. Deltamas Perkasa', 'JL. Kuningan Raya No 11 Jakarta Selatan', 'deltamas001@gmail.com', '02163864554', '2021-08-24 00:21:07'),
-(200211, 1, 'PT. Multi Prima Victory', 'Jl Haji Agus Salim', 'sbc25b@gmail.com', '02121212156', '2021-08-01 00:21:12');
+(200110, 1, 'PT. Deltamas Perkasa', 'JL. Kuningan Raya No 11 Jakarta Selatan', 'deltamas001@gmail.com', '02163864554', '2021-08-24 00:21:07');
 
 -- --------------------------------------------------------
 
@@ -81,6 +81,25 @@ CREATE TABLE `pembelian` (
   `kode_pembelian` varchar(30) NOT NULL,
   `id_barang` int(11) NOT NULL,
   `qty` int(11) NOT NULL,
+  `approved` varchar(20) DEFAULT NULL,
+  `approve_user_id` int(11) DEFAULT NULL,
+  `tanggal` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengiriman`
+--
+
+CREATE TABLE `pengiriman` (
+  `id` int(11) NOT NULL,
+  `kode_pengiriman` varchar(30) NOT NULL,
+  `kode_penjualan` varchar(30) NOT NULL,
+  `no_polisi` varchar(30) NOT NULL,
+  `nama_driver` varchar(30) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `tanggal` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -132,7 +151,8 @@ CREATE TABLE `stok_barang` (
   `harga` int(11) NOT NULL,
   `pemasok_id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
-  `tanggal` datetime NOT NULL
+  `tanggal` datetime NOT NULL,
+  `expired` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -189,6 +209,12 @@ ALTER TABLE `pembelian`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `pengiriman`
+--
+ALTER TABLE `pengiriman`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `penjualan`
 --
 ALTER TABLE `penjualan`
@@ -220,7 +246,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `konsumen`
 --
 ALTER TABLE `konsumen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pemasok`
@@ -232,6 +258,12 @@ ALTER TABLE `pemasok`
 -- AUTO_INCREMENT for table `pembelian`
 --
 ALTER TABLE `pembelian`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pengiriman`
+--
+ALTER TABLE `pengiriman`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

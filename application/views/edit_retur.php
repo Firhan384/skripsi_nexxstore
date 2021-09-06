@@ -36,7 +36,7 @@
 
             <div class="isi-barang">
 
-                <b>INPUT RETUR</b>
+                <b>UPDATE RETUR</b>
                 <br><br /><br />
                 <form action="<?php echo site_url('welcome/update_retur/'. $data->id) ?>" method="post">
                 <input type="hidden" name="penjualan_id">
@@ -56,6 +56,8 @@
                     </select><br /><br />
                     Nama Barang <br />
                     <select name="barang" style="width: 30%;" onchange="getValId(this)"></select><br /><br />
+                    Harga<br />
+                    <input type="number" name="harga" style="width: 10%" value="<?= $data->harga ?>" required readonly/><br /><br />
                     Jumlah<br />
                     <input type="number" name="jml" style="width: 10%" value="<?= $data->qty ?>" required /><br /><br />
                     Deskripsi<br />
@@ -82,7 +84,7 @@
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
                     const selected = element.id == penjualan_id ? 'selected' : '';
-                    htmlRender += `<option value="${element.id}" ${selected}>${element.nama_barang}</option>`;
+                    htmlRender += `<option value="${element.id}" ${selected} data-product="${element.barang_id}">${element.nama_barang}</option>`;
                 }
                 $("[name='barang']").empty().html(htmlRender);
             });
@@ -94,7 +96,7 @@
                 let htmlRender = '<option disabled selected>pilih barang</option>';
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
-                    htmlRender += `<option value="${element.id}">${element.nama_barang}</option>`;
+                    htmlRender += `<option value="${element.id}" data-product="${element.barang_id}">${element.nama_barang}</option>`;
                 }
                 $("[name='barang']").empty().html(htmlRender);
             });
@@ -102,7 +104,11 @@
 
         function getValId(val)
         {
+            const barang_id = val.selectedOptions[0].getAttribute('data-product'); 
             $("[name='penjualan_id']").val(val.value);
+            $.getJSON("<?= base_url('welcome/get_list_product_by_id?id=')?>" + barang_id, function(data) {
+                $("[name='harga']").val(data.harga);
+            });
         }
     </script>
 </body>

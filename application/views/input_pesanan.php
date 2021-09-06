@@ -68,7 +68,7 @@
 					Jumlah<br />
 					<input type="number" name="jml" style="width: 10%" required /><br /><br />
 					Harga<br />
-					<input type="number" name="harga" style="width: 10%" required/><br /><br />
+					<input type="number" name="harga" style="width: 10%" required readonly/><br /><br />
 					Satuan<br />
 					<input type="text" name="satuan" style="width: 10%" required readonly/><br /><br />
 					<button onclick="simpan()">simpan</button>
@@ -114,6 +114,7 @@
 			$.getJSON("<?= site_url('welcome/get_list_product_by_id') ?>?id=" + data.value, function(data) {
 				$("[name='satuan']").val(data.satuan);
 				$("[name='nama_barang']").val(data.nama_barang);
+				$("[name='harga']").val(data.harga);
 			});
 		}
 

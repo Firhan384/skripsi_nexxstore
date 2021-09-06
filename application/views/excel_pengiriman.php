@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Export Stok</title>
+    <title>Export Pengiriman</title>
 </head>
 
 <body>
@@ -34,35 +34,33 @@
 
     <?php
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=data_stok_" . time() . ".xls");
+    header("Content-Disposition: attachment; filename=data_pengiriman_" . time() . ".xls");
     ?>
 
     <center>
-        <h1>Export Stok</h1>
+        <h1>Export Pengiriman</h1>
     </center>
 
     <table border="1">
         <tr>
             <th>No</th>
-            <td>Id Barang</td>
-            <td>Id User</td>
-            <td>Nama Barang</td>
-            <td>Stok Barang</td>
-            <td>Satuan</td>
-            <td>Supplier</td>
+            <th>Kode Pengiriman</th>
+            <th>Kode Penjualan</th>
+            <th>No Plat</th>
+            <th>Nama Driver</th>
+            <th>tanggal</th>
         </tr>
         <?php
         $no = 1;
         foreach ($list as $key => $value) :
         ?>
             <tr>
-                <td><?php echo $no++; ?></td>
-                <td><?php echo $value->kode_barang ?></td>
-                <td><?php echo $value->id_user ?></td>
-                <td><?php echo $value->nama_barang ?></td>
-                <td><?php echo $value->stok_barang ?></td>
-                <td><?php echo $value->satuan ?></td>
-                <td><?php echo $value->nama_pemasok ?></td>
+                <td><?= $no ?></td>
+                <td><?= $value['kode_pengiriman'] ?></td>
+                <td><?= $value['kode_penjualan'] ?></td>
+                <td><?= $value['no_polisi'] ?></td>
+                <td><?= $value['nama_driver'] ?></td>
+                <td><?= $value['tanggal'] ?></td>
             </tr>
         <?php
         endforeach;

@@ -263,7 +263,7 @@ a{
 }
 
 .isi-barang{
-	height: 400px;
+	height: auto;
 	width: 95%;
 	margin: 5% auto;
 	text-align: center;

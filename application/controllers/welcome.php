@@ -18,6 +18,13 @@ class Welcome extends CI_Controller
 		$this->load->view('daftar');
 	}
 
+	public function hal_pengiriman()
+	{
+		$data['list'] = $this->model_dis->getUser('pengiriman');
+		$data['stock_warn'] = $this->model_dis->stock_warning()->result();
+		$this->load->view('pengiriman', $data);
+	}
+
 	public function hal_beranda()
 	{
 		$data['stock_warn'] = $this->model_dis->stock_warning()->result();
@@ -43,10 +50,34 @@ class Welcome extends CI_Controller
 		$this->load->view('retur', $data);
 	}
 
+	public function input_pengiriman()
+	{
+		$data['penjualan'] = $this->model_dis->getListPenjualanBy();
+		$this->load->view('input_pengiriman', $data);
+	}
+
 	public function input_barang()
 	{
 		$data['supplier'] = $this->model_dis->getUser('pemasok');
 		$this->load->view('input_barang', $data);
+	}
+	
+	function create_pengiriman()
+	{
+		$kode_pengiriman = $_POST['kode_pengiriman'];
+		$id_peng = $this->session->userdata('id_log');
+		$kode_penjualan = $_POST['kode_penjualan'];
+		$no_polisi = $_POST['no_polisi'];
+		$nama_driver = $_POST['nama_driver'];
+		$harga = $_POST['harga'];
+		$data = array('kode_pengiriman' => $kode_pengiriman, 'user_id' => $id_peng, 'kode_penjualan' =>
+		$kode_penjualan, 'no_polisi' => $no_polisi, 'nama_driver' => $nama_driver, 'tanggal' => date('Y-m-d h:i:s'), 'harga' => $harga);
+		$insert = $this->model_dis->tambah_user('pengiriman', $data);
+		if ($insert > 0) {
+			redirect('welcome/hal_pengiriman');
+		} else {
+			echo 'Gagal Input';
+		}
 	}
 
 	public function input_brg()
@@ -58,7 +89,7 @@ class Welcome extends CI_Controller
 		$satuan_brg = $_POST['satuan_brg'];
 		$harga = $_POST['harga'];
 		$data = array('kode_barang' => $id_brg, 'id_user' => $id_peng, 'nama_barang' =>
-		$nm_brg, 'stok_barang' => $stok_brg, 'satuan' => $satuan_brg, 'tanggal' => date('Y-m-d h:i:s'), 'harga' => $harga, 'pemasok_id' => $_POST['pemasok_id']);
+		$nm_brg, 'stok_barang' => $stok_brg, 'satuan' => $satuan_brg, 'tanggal' => date('Y-m-d h:i:s'), 'harga' => $harga, 'pemasok_id' => $_POST['pemasok_id'], 'expired' => $_POST['expired']);
 		$insert = $this->model_dis->tambah_user('stok_barang', $data);
 		if ($insert > 0) {
 			redirect('welcome/hal_stok');
@@ -89,7 +120,7 @@ class Welcome extends CI_Controller
 		$stok_brg = $_POST['stok_brg'];
 		$satuan_brg = $_POST['satuan_brg'];
 		$data = array('harga' => $harga, 'id_user' => $id_peng, 'nama_barang' =>
-		$nm_brg, 'stok_barang' => $stok_brg, 'satuan' => $satuan_brg, 'pemasok_id' => $_POST['pemasok_id']);
+		$nm_brg, 'stok_barang' => $stok_brg, 'satuan' => $satuan_brg, 'pemasok_id' => $_POST['pemasok_id'], 'expired' => $_POST['expired']);
 		$edit = $this->model_dis->editData('stok_barang', $data, $id);
 		if ($edit > 0) {
 			redirect('welcome/hal_stok');
@@ -214,6 +245,14 @@ class Welcome extends CI_Controller
 		}
 	}
 
+	public function pencarian_pengiriman()
+	{
+		$cari = $this->input->post('isi', true);
+		$this->db->like('kode_pengiriman', $cari);
+		$this->data['list'] = $this->model_dis->getUser('pengiriman');
+		$this->load->view('pengiriman', $this->data);
+	}
+
 	public function pencarian_pmsk()
 	{
 		$cari = $this->input->post('isi', true);
@@ -319,6 +358,17 @@ class Welcome extends CI_Controller
 		}
 	}
 
+	
+	public function delete_pengiriman($id)
+	{
+		$hapus = $this->model_dis->hapusData('pengiriman', $id);
+		if ($hapus > 0) {
+			redirect('welcome/hal_pengiriman');
+		} else {
+			echo 'Gagal Disimpan';
+		}
+	}
+
 	public function delete_retur($id)
 	{
 		$hapus = $this->model_dis->hapusData('retur', $id);
@@ -367,6 +417,13 @@ class Welcome extends CI_Controller
 		$data['konsumen'] = $this->model_dis->getUser('konsumen');
 		$data['data'] = $this->model_dis->getEditPenjualanById($id)->result_array();
 		$this->load->view('edit_pesanan', $data);
+	}
+
+	public function form_edit_pengiriman($id)
+	{
+		$data['penjualan'] = $this->model_dis->getListPenjualanBy();
+		$data['list'] = $this->model_dis->dataEdit2('pengiriman', $id);
+		$this->load->view('edit_pengiriman', $data);
 	}
 
 	public function form_edit_konsumen($id)
@@ -673,6 +730,12 @@ class Welcome extends CI_Controller
 		redirect('welcome/index');
 	}
 
+	public function print_pengiriman()
+	{
+		$data['list'] = $this->model_dis->getUser('pengiriman');
+		$this->load->view('print_pengiriman', $data);
+	}
+
 	public function print_retur()
 	{
 		$data['list'] = $this->model_dis->getListRetur();
@@ -786,6 +849,29 @@ class Welcome extends CI_Controller
 		}
 	}
 
+	public function export_pengiriman_pdf($d)
+	{
+		$datas = $this->model_dis->dataEdit2('pengiriman', $d);
+		if($datas !== NULL) {
+			$findData = $this->model_dis->getPenjualanById($datas->kode_penjualan)->result();
+			$data['list'] = $datas;
+			$data['konsumen'] = $this->model_dis->dataEdit2('konsumen', $findData[0]->id_konsumen);;
+			$data['po'] = $findData;
+			$this->load->view('export_pengiriman_pdf', $data);
+		}
+	}
+
+	public function export_excel_pengiriman()
+	{
+		$datas = $this->model_dis->export_pengiriman();
+		if ($datas->num_rows() > 0) {
+			$data['list'] = $datas->result_array();
+			$this->load->view('excel_pengiriman', $data);
+		} else {
+			echo "<script>alert('data pengiriman kosong');</script>";
+		}
+	}
+
 	function get_list_json_penjualan()
 	{
 		echo json_encode($this->model_dis->getPenjualanById($_GET['po'])->result());
@@ -795,7 +881,16 @@ class Welcome extends CI_Controller
 	{
 		echo json_encode($this->model_dis->getProductById($_GET['id'])->row());
 	}
-}
 
+	function get_list_penjualan()
+	{
+		echo json_encode($this->model_dis->getEditPenjualanById($_GET['kode'])->result());
+	}
+
+	function get_list_pembelian()
+	{
+		echo json_encode($this->model_dis->getListPoByPo($_GET['kode']));
+	}
+}
 /* End of file welcome.php */
 /* Location: ./application/controllers/welcome.php */

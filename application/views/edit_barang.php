@@ -74,6 +74,8 @@
 						endforeach;
 						?>
 					</select><br /><br />
+					Expired<br />
+					<input type="date" name="expired" value="<?php echo $dataEdit->expired ?>" required/><br /><br />
 					<input type="submit" name="simpan" value="Simpan" style="height:30px; width:10%;" />
 				</form>
 

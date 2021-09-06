@@ -19,7 +19,7 @@
 			<thead>
 				<tr>
 					<th>No</th>
-					<th>Kode Pembelian</th>
+					<th>Kode Penjualan</th>
 					<th>Jumlah barang</th>
 					<th>Total Qty</th>
 					<th>Konsumen</th>

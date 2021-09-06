@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Nexx Store Inventory</title>
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/style.css') ?>">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -86,7 +87,8 @@
                                 <td><?= $value->tanggal; ?></td>
                                 <td>
                                     <a href="<?php echo site_url('welcome/form_edit_pembelian/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;">Edit</a> ||
-                                    <a href="<?php echo site_url('welcome/delete_pmsk/' . $value->no_po) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a> || 
+                                    <a href="<?php echo site_url('welcome/delete_pmsk/' . $value->no_po) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a> ||
+                                    <a href="#" style="color: #8B0000; font-size: 14px;" onclick="detail('<?= $value->no_po ?>')">Detail</a> ||
                                     <a href="<?php echo site_url('welcome/export_pembelian_pdf/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;" target="_blank">Export</a>
                                 </td>
                             </tr>
@@ -103,10 +105,78 @@
         </div>
 
     </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Detail Penjualan</h2>
+            </div>
+            <div class="modal-body">
+                <div style="margin: 10px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Pembelian</th>
+                                <th>Kode Barang</th>
+                                <th>Nama Barang</th>
+                                <th>Harga</th>
+                                <th>Jumlah</th>
+                                <th>Satuan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="result">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 
     <div class="footer">
         2021 &copy; Nexx Store Inventory
     </div>
+    <script>
+        var modal = document.getElementById("myModal");
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        function detail(kode) {
+            $.getJSON("<?= site_url('welcome/get_list_pembelian') ?>?kode=" + kode, function(data) {
+                let htmlRender = '';
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    htmlRender += `<tr id="pm_${index}">`;
+                    htmlRender += `<td>${index+1}</td>`;
+                    htmlRender += `<td>${element.no_po}</td>`;
+                    htmlRender += `<td>${element.kode_barang}</td>`;
+                    htmlRender += `<td>${element.nama_barang}</td>`;
+                    htmlRender += `<td>${element.harga}</td>`;
+                    htmlRender += `<td>${element.qty}</td>`;
+                    htmlRender += `<td>${element.satuan}</td>`;
+                    htmlRender += '</tr>';
+                }
+                $("#result").empty().html(htmlRender);
+                modal.style.display = "block";
+            });
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
 </body>
 

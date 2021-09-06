@@ -41,6 +41,7 @@
 
                 <form action="<?php echo site_url('welcome/create_retur') ?>" method="post">
                     <input type="hidden" name="penjualan_id">
+                    <input type="hidden" name="barang_id">
                     Kode Retur<br />
                     <input type="text" name="kode_retur" required/><br /><br />
                     Kode Penjualan<br />
@@ -56,6 +57,8 @@
                     </select><br /><br />
                     Nama Barang <br />
                     <select name="barang" style="width: 30%;" onchange="getValId(this)"></select><br /><br />
+                    Harga<br />
+                    <input type="number" name="harga" style="width: 10%" required readonly/><br /><br />
                     Jumlah<br />
                     <input type="number" name="jml" style="width: 10%" required /><br /><br />
                     Deskripsi<br />
@@ -75,11 +78,10 @@
     <script>
         function getVal(id) {
             $.getJSON("<?= base_url('welcome/get_list_json_penjualan?po=')?>" + id.value, function(data) {
-                $("[name='penjualan_id']").val(data.id);
                 let htmlRender = '<option disabled selected>pilih barang</option>';
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
-                    htmlRender += `<option value="${element.id}">${element.nama_barang}</option>`;
+                    htmlRender += `<option value="${element.id}" data-product="${element.barang_id}">${element.nama_barang}</option>`;
                 }
                 $("[name='barang']").empty().html(htmlRender);
             });
@@ -87,7 +89,11 @@
 
         function getValId(val)
         {
+            const barang_id = val.selectedOptions[0].getAttribute('data-product'); 
             $("[name='penjualan_id']").val(val.value);
+            $.getJSON("<?= base_url('welcome/get_list_product_by_id?id=')?>" + barang_id, function(data) {
+                $("[name='harga']").val(data.harga);
+            });
         }
     </script>
 </body>

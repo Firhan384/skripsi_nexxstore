@@ -85,6 +85,7 @@
 							<th>Satuan</th>
 							<th>Supplier</th>
 							<th>Expired</th>
+							<th>Harga</th>
 							<th>Option</th>
 						</tr>
 					</thead>
@@ -100,6 +101,7 @@
 								<td><?php echo $r['satuan'] ?></td>
 								<td><?php echo $r['nama_pemasok'] ?></td>
 								<td><?php echo $r['expired'] ?></td>
+								<td><?php echo $r['harga'] ?></td>
 								<td>
 									<a href="<?php echo site_url('welcome/form_edit_brg/' . $r['id']) ?>" style="color: #8B0000;">Edit</a> ||
 									<a href="<?php echo site_url('welcome/delete_brg/' . $r['id']) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000;">Hapus</a>

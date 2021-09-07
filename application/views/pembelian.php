@@ -87,7 +87,7 @@
                                 <td><?= $value->tanggal; ?></td>
                                 <td>
                                     <a href="<?php echo site_url('welcome/form_edit_pembelian/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;">Edit</a> ||
-                                    <a href="<?php echo site_url('welcome/delete_pmsk/' . $value->no_po) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a> ||
+                                    <a href="<?php echo site_url('welcome/delete_pembelian/' . $value->no_po) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a> ||
                                     <a href="#" style="color: #8B0000; font-size: 14px;" onclick="detail('<?= $value->no_po ?>')">Detail</a> ||
                                     <a href="<?php echo site_url('welcome/export_pembelian_pdf/' . $value->no_po) ?>" style="color: #8B0000; font-size: 14px;" target="_blank">Export</a>
                                 </td>

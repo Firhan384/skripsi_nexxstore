@@ -84,7 +84,7 @@ class Welcome extends CI_Controller
 
 	function edit_approval($kode)
 	{
-		if($this->session->userdata('status') === 'gudang') {
+		if ($this->session->userdata('status') === 'gudang') {
 			echo "anda tidak memiliki akses approve";
 			exit(0);
 		}
@@ -99,11 +99,11 @@ class Welcome extends CI_Controller
 
 	function create_penerima_brg()
 	{
-		for ($i=0; $i <count($_POST['id']); $i++) { 
+		for ($i = 0; $i < count($_POST['id']); $i++) {
 			$findPembelian = $this->model_dis->getPembelianById($_POST['id'][$i])->row();
 			$findProduct = $this->model_dis->getProductById($_POST['id_barang'][$i])->row();
 
-			if(intval($_POST['qty_diterima'][$i]) > intval($_POST['qty_diff'][$i])) {
+			if (intval($_POST['qty_diterima'][$i]) > intval($_POST['qty_diff'][$i])) {
 				echo "qty datang lebih besar daripada qty sisa";
 				exit(0);
 			}
@@ -118,8 +118,8 @@ class Welcome extends CI_Controller
 			$this->model_dis->editData('stok_barang', [
 				'stok_barang' => $findProduct->stok_barang + intval($_POST['qty_diterima'][$i]),
 			], $findProduct->id);
-
 		}
+		redirect('welcome/hal_penerima');
 	}
 
 	function create_pengiriman()
@@ -305,6 +305,16 @@ class Welcome extends CI_Controller
 		}
 	}
 
+	public function delete_pembelian($id)
+	{
+		$hapus = $this->model_dis->hapusData('pembelian', $id);
+		if ($hapus > 0) {
+			redirect('welcome/hal_pembelian');
+		} else {
+			echo 'Gagal Disimpan';
+		}
+	}
+
 	public function pencarian_penerima()
 	{
 		$cari = $this->input->post('isi', true);
@@ -376,6 +386,7 @@ class Welcome extends CI_Controller
 
 	public function input_pembelian()
 	{
+		$data['barang'] = $this->model_dis->getUser('stok_barang');
 		$data['hasil'] = $this->model_dis->getUser('pemasok');
 		$data['code'] = $this->model_dis->getGenerateCodePo();
 		$this->load->view('input_pembelian', $data);
@@ -567,10 +578,10 @@ class Welcome extends CI_Controller
 		$user = $this->input->post('username', true);
 		$kode = $this->input->post('password', true);
 		$status = $this->input->post('status', true);
-		$cek = $this->model_dis->proses_login($user, $kode, $status);
+		$cek = $this->model_dis->proses_login($user, $kode);
 		$hasil = $cek->num_rows();
 		if ($hasil > 0) {
-			$log = $this->db->get_where('user', array('username' => $user, 'password' => $kode, 'status' => $status))->row();
+			$log = $this->db->get_where('user', array('username' => $user, 'password' => $kode))->row();
 			$ses = array(
 				'logged_in' => true,
 				'nama' => $log->nama_user,
@@ -769,28 +780,55 @@ class Welcome extends CI_Controller
 		$data = $_POST['data'];
 
 		for ($i = 0; $i < count($data); $i++) {
-			// insert product
-			$productId = $this->model_dis->insert_id([
-				'kode_barang' => $_POST['data'][$i]['kode_barang'],
-				'id_user' => $this->session->userdata('id_log'),
-				'nama_barang' => $_POST['data'][$i]['nm_barang'],
-				'stok_barang' => 0,
-				'satuan' => $_POST['data'][$i]['satuan'],
-				'harga' => $_POST['data'][$i]['harga'],
-				'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
-				'tanggal' => date('Y-m-d h:i:s')
-			], 'stok_barang');
+			if ($_POST['data'][$i]['typeProduct'] == 'new') {
+				// insert product
+				$productId = $this->model_dis->insert_id([
+					'kode_barang' => $_POST['data'][$i]['kode_barang'],
+					'id_user' => $this->session->userdata('id_log'),
+					'nama_barang' => $_POST['data'][$i]['nm_barang'],
+					'stok_barang' => 0,
+					'satuan' => $_POST['data'][$i]['satuan'],
+					'harga' => $_POST['data'][$i]['harga'],
+					'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
+					'tanggal' => date('Y-m-d h:i:s')
+				], 'stok_barang');
 
-			// insert ke pembelian
-			$this->model_dis->tambah_user('pembelian', [
-				'id_barang' => $productId,
-				'qty' => $_POST['data'][$i]['qty'],
-				'kode_pembelian' => $_POST['data'][$i]['id_pesanan'],
-				'id_user' => $this->session->userdata('id_log'),
-				'approved' => 'pending',
-				'approve_user_id' => 0,
-				'tanggal' => date('Y-m-d h:i:s'),
-			]);
+				// insert ke pembelian
+				$this->model_dis->tambah_user('pembelian', [
+					'id_barang' => $productId,
+					'qty' => $_POST['data'][$i]['qty'],
+					'kode_pembelian' => $_POST['data'][$i]['id_pesanan'],
+					'id_user' => $this->session->userdata('id_log'),
+					'approved' => 'pending',
+					'approve_user_id' => 0,
+					'qty_in' => 0,
+					'tanggal' => date('Y-m-d h:i:s'),
+				]);
+			} else {
+				// update stok yg sudah ada
+				$findProduct = $this->model_dis->getProductById($_POST['data'][$i]['barang_id'])->row();
+
+				if($findProduct == NULL) {
+					echo json_encode([
+						'valid' => false,
+						'message' => 'gagal, product tidak ditemukan'
+					]);
+					exit(0);
+				}
+
+				// insert ke pembelian
+				$this->model_dis->tambah_user('pembelian', [
+					'id_barang' => $findProduct->id,
+					'qty' => $_POST['data'][$i]['qty'],
+					'kode_pembelian' => $_POST['data'][$i]['id_pesanan'],
+					'id_user' => $this->session->userdata('id_log'),
+					'approved' => 'pending',
+					'approve_user_id' => 0,
+					'qty_in' => 0,
+					'tanggal' => date('Y-m-d h:i:s'),
+				]);
+
+			}
 		}
 
 		echo json_encode([
@@ -845,6 +883,12 @@ class Welcome extends CI_Controller
 	{
 		$this->data['hasil'] = $this->model_dis->getUser('stok_barang');
 		$this->load->view('print_barang', $this->data);
+	}
+
+	public function export_excel_retur()
+	{
+		$data['list'] = $this->model_dis->getListRetur();
+		$this->load->view('excel_retur', $data);
 	}
 
 	public function export_excel_penjualan()

@@ -93,7 +93,12 @@ class Model_dis extends CI_Model
 
 	public function hapusData($table_name, $id)
 	{
-		$this->db->where('id', $id);
+		if($table_name == 'pembelian') {
+			$whereData = 'kode_pembelian';
+		} else {
+			$whereData = 'id';
+		}
+		$this->db->where($whereData, $id);
 		$hapus = $this->db->delete($table_name);
 		return $hapus;
 	}
@@ -146,7 +151,7 @@ class Model_dis extends CI_Model
 		FROM `pembelian`
 		LEFT JOIN stok_barang ON pembelian.id_barang = stok_barang.id
 		LEFT JOIN pemasok ON stok_barang.pemasok_id = pemasok.id_pemasok
-		WHERE pembelian.tanggal >= '$a' AND penjualan.tanggal <= '$b'
+		WHERE pembelian.tanggal >= '$a' AND pembelian.tanggal <= '$b'
 		GROUP BY pembelian.kode_pembelian");
 	}
 
@@ -255,7 +260,7 @@ class Model_dis extends CI_Model
 		$sql = "SELECT 
 		retur.kode_retur, retur.id, retur.tanggal,retur.qty, retur.deskripsi,
 		penjualan.kode_penjualan,
-		stok_barang.nama_barang, stok_barang.kode_barang,
+		stok_barang.nama_barang, stok_barang.kode_barang, stok_barang.harga,
 		konsumen.nama
 		FROM `retur`
 		LEFT JOIN penjualan ON retur.penjualan_id = penjualan.id

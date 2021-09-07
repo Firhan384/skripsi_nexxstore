@@ -37,7 +37,7 @@
                     <form method="post" action="<?php echo site_url('welcome/pencarian_retur') ?>">
                         <input type="text" name="isi" style="width: 30%; padding-left: 1%;" placeholder="cari berdasarkan kode retur" />
                         <input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
-                        <a href="<?php echo site_url('welcome/input_retur') ?>" style='margin-left: 5%;'>Input retur</a> || <a href="<?php echo site_url('welcome/print_retur') ?>">Print retur</a>
+                        <a href="<?php echo site_url('welcome/input_retur') ?>" style='margin-left: 5%;'>Input retur</a> || <a href="<?php echo site_url('welcome/print_retur') ?>" target="_blank">Print retur</a> || <a href="<?php echo site_url('welcome/export_excel_retur') ?>" target="_blank">Export Excel</a>
                     </form>
                 </div>
 
@@ -51,6 +51,7 @@
                             <th>Kode Barang</th>
                             <th>Nama Konsumen</th>
                             <th>Qty</th>
+                            <th>Harga</th>
                             <th>Tanggal</th>
                             <th>deskripsi</th>
                             <th>Option</th>
@@ -69,6 +70,7 @@
                                 <td><?= $value['kode_barang'] ?></td>
                                 <td><?= $value['nama'] ?></td>
                                 <td><?= $value['qty'] ?></td>
+                                <td><?= $value['harga'] ?></td>
                                 <td><?= $value['tanggal'] ?></td>
                                 <td><?= $value['deskripsi'] ?></td>
                                 <td>

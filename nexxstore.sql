@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2021 at 10:17 PM
+-- Generation Time: Sep 07, 2021 at 08:33 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -81,8 +81,11 @@ CREATE TABLE `pembelian` (
   `kode_pembelian` varchar(30) NOT NULL,
   `id_barang` int(11) NOT NULL,
   `qty` int(11) NOT NULL,
+  `qty_in` int(11) NOT NULL,
   `approved` varchar(20) DEFAULT NULL,
   `approve_user_id` int(11) DEFAULT NULL,
+  `tanggal_in` datetime DEFAULT NULL,
+  `tanggal_approved` datetime DEFAULT NULL,
   `tanggal` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

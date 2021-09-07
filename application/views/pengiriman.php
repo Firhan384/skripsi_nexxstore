@@ -1,37 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<title>Nexx Store Inventory</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('css/style.css') ?>">
-
-
 </head>
-
 <body>
-
 	<div class="header">
-
 		<div class="header-center">
 			NEXX STORE INVENTORY
 		</div>
-
 		<div class="header-right">
 			<?php $this->session->userdata('logged_in') ?>
 			<?php $namaPeng = $this->session->userdata('nama'); ?>
 			<?php echo $namaPeng ?>
 		</div>
-
 	</div>
-
 	<div class="section">
-
 		<?php
 		$this->load->view('layout/navbar.php');
 		?>
-
-
 		<div class="bag-menu">
 			<div class="input-barang">
 				<div class="input-barang-1">
@@ -41,7 +29,6 @@
 						<a href="<?php echo site_url('welcome/input_pengiriman') ?>" style='margin-left: 10%;'>Input Pengiriman</a> || <a href="<?php echo site_url('welcome/print_pengiriman') ?>" target="_blank">Print Pengiriman</a> || <a href="<?php echo site_url('welcome/export_excel_pengiriman') ?>">Print Excel</a>
 					</form>
 				</div>
-
 				<table>
 					<thead>
 						<tr>
@@ -85,5 +72,4 @@
 		2021 &copy; Nexx Store Inventory
 	</div>
 </body>
-
 </html>

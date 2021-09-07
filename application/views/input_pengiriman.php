@@ -5,33 +5,22 @@
     <meta charset="utf-8">
     <title>Nexx Store Inventory</title>
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/style.css') ?>">
-
-
 </head>
-
 <body>
-
     <div class="header">
-
         <div class="header-center">
             NEXX STORE INVENTORY
         </div>
-
         <div class="header-right">
             <?php $this->session->userdata('logged_in') ?>
             <?php $namaPeng = $this->session->userdata('nama'); ?>
             <?php echo $namaPeng ?>
         </div>
-
     </div>
-
     <div class="section">
-
         <?php
         $this->load->view('layout/navbar.php');
         ?>
-
-
         <div class="bag-menu">
 
             <div class="isi-barang">

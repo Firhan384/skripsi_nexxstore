@@ -12,7 +12,13 @@
                 <li><a href="<?php echo site_url('welcome/hal_retur') ?>">Retur</a></li>
                 <li><a href="<?php echo site_url('welcome/hal_pengiriman') ?>">Pengiriman</a></li>
                 <li><a href="<?php echo site_url('welcome/hal_penerima') ?>">Penerima</a></li>
-                <li><a href="<?php echo site_url('welcome/hal_approval') ?>">Approval</a></li>
+                <?php
+                    if($this->session->userdata('status') !== 'gudang'):
+                ?>
+                    <li><a href="<?php echo site_url('welcome/hal_approval') ?>">Approval</a></li>
+                <?php
+                    endif;
+                ?>
             </ul>
         </li>
         <li><a href="<?php echo site_url('welcome/hal_stok') ?>">Stok Barang</a></li>

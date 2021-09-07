@@ -72,6 +72,13 @@ class Model_dis extends CI_Model
 		return $edit;
 	}
 
+	function updateApproval($kode, $data)
+	{
+		$this->db->where('kode_pembelian', $kode);
+		$edit = $this->db->update('pembelian', $data);
+		return $edit;
+	}
+
 	public function dataEdit2($table_name, $id)
 	{
 		if ($table_name == 'konsumen') {
@@ -322,6 +329,13 @@ class Model_dis extends CI_Model
 		return $this->db->get();
 	}
 
+	function getPembelianById($id) {
+		$this->db->select("*");
+		$this->db->from('pembelian');
+		$this->db->where('id', $id);
+		return $this->db->get();
+	}
+
 	function getListPenjualanBy()
 	{
 		return $this->db->query("SELECT kode_penjualan, id_barang, id FROM penjualan GROUP BY kode_penjualan")->result();
@@ -433,5 +447,49 @@ class Model_dis extends CI_Model
 		LEFT JOIN stok_barang ON penjualan.id_barang = stok_barang.id
 		WHERE penjualan.kode_penjualan LIKE '%$cari%'
 		GROUP BY penjualan.kode_penjualan")->result();
+	}
+
+	function getlistApproval()
+	{
+		$this->db->select("kode_pembelian, approved, tanggal_approved, tanggal");
+		$this->db->from('pembelian');
+		$this->db->group_by('kode_pembelian');
+		return $this->db->get();
+	}
+
+	function getListPenerima($cari = '')
+	{
+		$sql = "SELECT 
+		SUM(qty_in) as total_qty_in, SUM(qty) as total_qty_order,
+		kode_pembelian, COUNT(id_barang) as total_barang, tanggal
+		FROM `pembelian`
+		WHERE approved='approved' ";
+
+		if($cari !== '') {
+			$sql .= "AND kode_pembelian LIKE '%$cari%'";
+		}
+
+		$sql .= " GROUP BY kode_pembelian HAVING SUM(qty_in) <= SUM(qty)";
+
+		return $this->db->query($sql)->result();
+	}
+
+	function getListSisaPenerima($kode) {
+		return $this->db->query("SELECT 
+		pembelian.id, pembelian.id_barang, pembelian.qty, pembelian.qty_in as sisa_qty, (pembelian.qty - pembelian.qty_in) as diff_qty,
+		stok_barang.kode_barang, stok_barang.nama_barang
+		FROM `pembelian`
+		LEFT JOIN stok_barang ON pembelian.id_barang = stok_barang.id
+		WHERE kode_pembelian='$kode'
+		HAVING diff_qty > 0")->result();
+	}
+
+	function getListDetailPenerima($kode) {
+		return $this->db->query("SELECT 
+		pembelian.id, pembelian.id_barang, pembelian.qty, pembelian.qty_in as sisa_qty, (pembelian.qty - pembelian.qty_in) as diff_qty,
+		stok_barang.kode_barang, stok_barang.nama_barang
+		FROM `pembelian`
+		LEFT JOIN stok_barang ON pembelian.id_barang = stok_barang.id
+		WHERE kode_pembelian='$kode'")->result();
 	}
 }

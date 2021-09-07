@@ -1,44 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<title>Nexx Store Inventory</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('css/style.css') ?>">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </head>
-
 <body>
-
 	<div class="header">
-
 		<div class="header-center">
 			NEXX STORE INVENTORY
 		</div>
-
 		<div class="header-right">
 			<?php $this->session->userdata('logged_in') ?>
 			<?php $namaPeng = $this->session->userdata('nama'); ?>
 			<?php echo $namaPeng ?>
 		</div>
-
 	</div>
-
 	<div class="section">
-
 		<?php
 		$this->load->view('layout/navbar.php');
 		?>
-
-
 		<div class="bag-menu">
-
 			<div class="isi-barang" style="margin-bottom: 100px;">
-
 				<b>INPUT PESANAN</b>
 				<br><br /><br />
-
 				<!-- <form action="<?php echo site_url('welcome/input_psn') ?>" method="post"> -->
 					<input type="hidden" name="nama_barang">
 					Kode Pesanan<br />
@@ -73,7 +59,6 @@
 					<input type="text" name="satuan" style="width: 10%" required readonly/><br /><br />
 					<button onclick="simpan()">simpan</button>
 				<!-- </form> -->
-
 			</div>
 			<div style="margin: 10px;">
 				<table>
@@ -99,17 +84,13 @@
 					</tfoot>
 				</table>
 			</div>
-
 		</div>
-
 	</div>
-
 	<div class="footer">
 		2021 &copy; Nexx Store Inventory
 	</div>
 	<script>
 		let data = [];
-
 		function changeProduct(data) {
 			$.getJSON("<?= site_url('welcome/get_list_product_by_id') ?>?id=" + data.value, function(data) {
 				$("[name='satuan']").val(data.satuan);
@@ -117,7 +98,6 @@
 				$("[name='harga']").val(data.harga);
 			});
 		}
-
 		function simpan() {
 			const id_pesanan = $("[name='id_pesanan']").val();
 			const barang_id = $("[name='barang_id']").val();
@@ -126,7 +106,6 @@
 			const nama_barang = $("[name='nama_barang']").val();
 			const satuan = $("[name='satuan']").val();
 			const konsumen_id = $("[name='konsumen_id']").val();
-
 			if(id_pesanan !== '' && jml !== '') {
 				data.push({
 					id_pesanan,
@@ -155,12 +134,10 @@
 				$("#result").empty().html(htmlRender);
 			}
 		}
-
 		function hapus(idx) {
 			$(`#pm_${idx}`).remove();
 			data.splice(idx, 1);
 		}
-
 		function simpanData()
 		{
 			if(data.length > 0) {
@@ -183,7 +160,5 @@
 			}
 		}
 	</script>
-
 </body>
-
 </html>

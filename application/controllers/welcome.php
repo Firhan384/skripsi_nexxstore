@@ -18,6 +18,20 @@ class Welcome extends CI_Controller
 		$this->load->view('daftar');
 	}
 
+	public function hal_approval()
+	{
+		$data['list'] = $this->model_dis->getListApproval()->result();
+		$data['stock_warn'] = $this->model_dis->stock_warning()->result();
+		$this->load->view('approval', $data);
+	}
+
+	public function hal_penerima()
+	{
+		$data['list'] = $this->model_dis->getListPenerima();
+		$data['stock_warn'] = $this->model_dis->stock_warning()->result();
+		$this->load->view('penerima', $data);
+	}
+
 	public function hal_pengiriman()
 	{
 		$data['list'] = $this->model_dis->getUser('pengiriman');
@@ -56,12 +70,58 @@ class Welcome extends CI_Controller
 		$this->load->view('input_pengiriman', $data);
 	}
 
+	public function input_penerima($kode)
+	{
+		$data['list'] = $this->model_dis->getListSisaPenerima($kode);
+		$this->load->view('input_penerima', $data);
+	}
+
 	public function input_barang()
 	{
 		$data['supplier'] = $this->model_dis->getUser('pemasok');
 		$this->load->view('input_barang', $data);
 	}
-	
+
+	function edit_approval($kode)
+	{
+		if($this->session->userdata('status') === 'gudang') {
+			echo "anda tidak memiliki akses approve";
+			exit(0);
+		}
+
+		$update = $this->model_dis->updateApproval($kode, [
+			'approved' => 'approved',
+			'approve_user_id' => $this->session->userdata('id_log'),
+			'tanggal_approved' => date('Y-m-d h:i:s')
+		]);
+		redirect('welcome/hal_approval');
+	}
+
+	function create_penerima_brg()
+	{
+		for ($i=0; $i <count($_POST['id']); $i++) { 
+			$findPembelian = $this->model_dis->getPembelianById($_POST['id'][$i])->row();
+			$findProduct = $this->model_dis->getProductById($_POST['id_barang'][$i])->row();
+
+			if(intval($_POST['qty_diterima'][$i]) > intval($_POST['qty_diff'][$i])) {
+				echo "qty datang lebih besar daripada qty sisa";
+				exit(0);
+			}
+
+			//hitung barang datang
+			$qtyIn = $findPembelian->qty_in + intval($_POST['qty_diterima'][$i]);
+			$this->model_dis->editData('pembelian', [
+				'qty_in' => $qtyIn,
+				'tanggal_in' => date('Y-m-d h:i:s')
+			], $findPembelian->id);
+
+			$this->model_dis->editData('stok_barang', [
+				'stok_barang' => $findProduct->stok_barang + intval($_POST['qty_diterima'][$i]),
+			], $findProduct->id);
+
+		}
+	}
+
 	function create_pengiriman()
 	{
 		$kode_pengiriman = $_POST['kode_pengiriman'];
@@ -245,6 +305,13 @@ class Welcome extends CI_Controller
 		}
 	}
 
+	public function pencarian_penerima()
+	{
+		$cari = $this->input->post('isi', true);
+		$data['list'] = $this->model_dis->getListPenerima($cari);
+		$this->load->view('penerima', $data);
+	}
+
 	public function pencarian_pengiriman()
 	{
 		$cari = $this->input->post('isi', true);
@@ -358,7 +425,7 @@ class Welcome extends CI_Controller
 		}
 	}
 
-	
+
 	public function delete_pengiriman($id)
 	{
 		$hapus = $this->model_dis->hapusData('pengiriman', $id);
@@ -535,7 +602,7 @@ class Welcome extends CI_Controller
 				$id_produk = $this->model_dis->insert_id([
 					'kode_barang' =>  $_POST['data'][$i]['kode_barang'],
 					'nama_barang' =>  $_POST['data'][$i]['nama_barang'],
-					'stok_barang' =>  $_POST['data'][$i]['jml'],
+					'stok_barang' =>  0,
 					'satuan' =>  $_POST['data'][$i]['satuan'],
 					'harga' =>  $_POST['data'][$i]['harga'],
 					'pemasok_id' =>  $_POST['data'][$i]['pemasok_id'],
@@ -544,12 +611,18 @@ class Welcome extends CI_Controller
 				], 'stok_barang');
 
 				// simpan pembelian
-				$datas = array('kode_pembelian' => $kode_penjualan, 'id_barang' =>
-				$id_produk, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_user' => $id_peng);
+				$datas = array(
+					'kode_pembelian' => $kode_penjualan, 'id_barang' =>
+					$id_produk, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_user' => $id_peng, 'approved' => 'pending',
+					'approve_user_id' => 0,
+				);
 				$this->model_dis->tambah_user('pembelian', $datas);
 			} else if ($_POST['data'][$i]['status'] == 'old') {
 				// update pembelian
-				$datas = array('kode_pembelian' => $kode_penjualan, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_barang' => $_POST['data'][$i]['barang_id'], 'id_user' => $id_peng);
+				$datas = array(
+					'kode_pembelian' => $kode_penjualan, 'qty' => $jml, 'tanggal' => date('Y-m-d h:i:s'), 'id_barang' => $_POST['data'][$i]['barang_id'], 'id_user' => $id_peng, 'approved' => 'pending',
+					'approve_user_id' => 0,
+				);
 
 				$this->model_dis->editData('pembelian', $datas, $_POST['data'][$i]['id']);
 
@@ -565,7 +638,7 @@ class Welcome extends CI_Controller
 
 				$this->model_dis->editData('stok_barang', [
 					'nama_barang' => $_POST['data'][$i]['nama_barang'],
-					'stok_barang' => $_POST['data'][$i]['jml'],
+					'stok_barang' => 0,
 					'satuan' => $_POST['data'][$i]['satuan'],
 					'harga' => $_POST['data'][$i]['harga'],
 					'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
@@ -636,7 +709,7 @@ class Welcome extends CI_Controller
 					'stok_barang' => $qty
 				], $productData->id);
 			} else if ($_POST['data'][$i]['status'] == 'deleted') {
-				
+
 				$findData = $this->model_dis->getById('penjualan', $_POST['data'][$i]['id'])->row();
 				$this->model_dis->editData('stok_barang', [
 					'stok_barang' => ($findData->qty + $productData->stok_barang)
@@ -701,7 +774,7 @@ class Welcome extends CI_Controller
 				'kode_barang' => $_POST['data'][$i]['kode_barang'],
 				'id_user' => $this->session->userdata('id_log'),
 				'nama_barang' => $_POST['data'][$i]['nm_barang'],
-				'stok_barang' => $_POST['data'][$i]['qty'],
+				'stok_barang' => 0,
 				'satuan' => $_POST['data'][$i]['satuan'],
 				'harga' => $_POST['data'][$i]['harga'],
 				'pemasok_id' => $_POST['data'][$i]['pemasok_id'],
@@ -714,6 +787,8 @@ class Welcome extends CI_Controller
 				'qty' => $_POST['data'][$i]['qty'],
 				'kode_pembelian' => $_POST['data'][$i]['id_pesanan'],
 				'id_user' => $this->session->userdata('id_log'),
+				'approved' => 'pending',
+				'approve_user_id' => 0,
 				'tanggal' => date('Y-m-d h:i:s'),
 			]);
 		}
@@ -852,7 +927,7 @@ class Welcome extends CI_Controller
 	public function export_pengiriman_pdf($d)
 	{
 		$datas = $this->model_dis->dataEdit2('pengiriman', $d);
-		if($datas !== NULL) {
+		if ($datas !== NULL) {
 			$findData = $this->model_dis->getPenjualanById($datas->kode_penjualan)->result();
 			$data['list'] = $datas;
 			$data['konsumen'] = $this->model_dis->dataEdit2('konsumen', $findData[0]->id_konsumen);;
@@ -890,6 +965,11 @@ class Welcome extends CI_Controller
 	function get_list_pembelian()
 	{
 		echo json_encode($this->model_dis->getListPoByPo($_GET['kode']));
+	}
+
+	function get_list_penerima()
+	{
+		echo json_encode($this->model_dis->getListDetailPenerima($_GET['kode']));
 	}
 }
 /* End of file welcome.php */

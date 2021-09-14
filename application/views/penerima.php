@@ -56,7 +56,11 @@
 								<td><?= $value->total_qty_in ?></td>
 								<td><?= $value->tanggal ?></td>
 								<td>
-									<a href="<?php echo site_url('welcome/input_penerima/' . $value->kode_pembelian) ?>" style="color: #8B0000; font-size: 14px;">Input</a> ||
+									<?php
+									if ($this->session->userdata('status') == 'gudang') :
+									?>
+										<a href="<?php echo site_url('welcome/input_penerima/' . $value->kode_pembelian) ?>" style="color: #8B0000; font-size: 14px;">Input</a>
+									<?php endif; ?> ||
 									<a href="#" style="color: #8B0000; font-size: 14px;" onclick="detail('<?= $value->kode_pembelian ?>')">Detail</a>
 								</td>
 							</tr>
@@ -129,11 +133,11 @@
 			});
 		}
 		// When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
 	</script>
 </body>
 

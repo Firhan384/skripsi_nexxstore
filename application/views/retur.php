@@ -37,7 +37,13 @@
                     <form method="post" action="<?php echo site_url('welcome/pencarian_retur') ?>">
                         <input type="text" name="isi" style="width: 30%; padding-left: 1%;" placeholder="cari berdasarkan kode retur" />
                         <input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
-                        <a href="<?php echo site_url('welcome/input_retur') ?>" style='margin-left: 5%;'>Input retur</a> || <a href="<?php echo site_url('welcome/print_retur') ?>" target="_blank">Print retur</a> || <a href="<?php echo site_url('welcome/export_excel_retur') ?>" target="_blank">Export Excel</a>
+                        <?php
+                        if ($this->session->userdata('status') !== 'gudang') :
+                        ?>
+                            <a href="<?php echo site_url('welcome/input_retur') ?>" style='margin-left: 5%;'>Input retur</a> || <a href="<?php echo site_url('welcome/print_retur') ?>" target="_blank">Print retur</a> || <a href="<?php echo site_url('welcome/export_excel_retur') ?>" target="_blank">Export Excel</a>
+                        <?php
+                        endif;
+                        ?>
                     </form>
                 </div>
 
@@ -59,8 +65,8 @@
                     </thead>
                     <tbody>
                         <?php
-                            $no = 1;
-                            foreach ($list as $key => $value):
+                        $no = 1;
+                        foreach ($list as $key => $value) :
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
@@ -74,13 +80,19 @@
                                 <td><?= $value['tanggal'] ?></td>
                                 <td><?= $value['deskripsi'] ?></td>
                                 <td>
-									<a href="<?php echo site_url('welcome/form_edit_retur/' . $value['id']) ?>" style="color: #8B0000; font-size: 14px;">Edit</a> ||
-									<a href="<?php echo site_url('welcome/delete_retur/' . $value['id']) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a>
-								</td>
+                                    <?php
+                                    if ($this->session->userdata('status') !== 'gudang') :
+                                    ?>
+                                        <a href="<?php echo site_url('welcome/form_edit_retur/' . $value['id']) ?>" style="color: #8B0000; font-size: 14px;">Edit</a>
+                                        <?php
+                                    endif;
+                                        ?>||
+                                        <a href="<?php echo site_url('welcome/delete_retur/' . $value['id']) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a>
+                                </td>
                             </tr>
-                        <?php   
+                        <?php
                             $no++;
-                            endforeach;
+                        endforeach;
                         ?>
                     </tbody>
                 </table>

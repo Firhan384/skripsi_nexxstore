@@ -65,11 +65,21 @@
 					<form method="post" action="<?php echo site_url('welcome/pencarian_brg') ?>">
 						<input type="text" name="isi" style="width: 30%; padding-left: 1%;" />
 						<input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
-
-
+						<?php
+							if($this->session->userdata('status') === 'gudang'):
+						?>
 						<a href="<?php echo site_url('welcome/input_barang') ?>" style='margin-left: 10%;'>Input Barang</a>
+						<?php
+							endif;
+						?>
+						<?php
+							if($this->session->userdata('status') !== 'gudang'):
+						?>
 						|| <a href="<?php echo site_url('welcome/print_barang') ?>" target="_blank">Print Barang</a>
 						|| <a href="<?php echo site_url('welcome/export_excel_stok') ?>" target="_blank">Export Excel</a>
+						<?php
+							endif;
+						?>
 
 					</form>
 

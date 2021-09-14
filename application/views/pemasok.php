@@ -47,7 +47,13 @@
 					<form method="post" action="<?php echo site_url('welcome/pencarian_pmsk') ?>">
 						<input type="text" name="isi" style="width: 30%; padding-left: 1%;" />
 						<input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
+						<?php
+							if($this->session->userdata('status') !== 'gudang'):
+						?>
 						<a href="<?php echo site_url('welcome/input_pemasok') ?>" style='margin-left: 10%;'>Input Pemasok</a> || <a href="<?php echo site_url('welcome/print_pemasok') ?>">Print Pemasok</a>
+						<?php
+							endif;
+						?>
 					</form>
 				</div>
 

@@ -37,7 +37,13 @@
                     <form method="post" action="<?php echo site_url('welcome/pencarian_konsumen') ?>">
                         <input type="text" name="isi" style="width: 30%; padding-left: 1%;" />
                         <input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
+                        <?php
+							if($this->session->userdata('status') !== 'gudang'):
+						?>
                         <a href="<?php echo site_url('welcome/input_konsumen') ?>" style='margin-left: 5%;'>Input Konsumen</a> || <a href="<?php echo site_url('welcome/print_konsumen') ?>">Print Konsumen</a> || <a href="<?php echo site_url('welcome/export_excel_konsumen') ?>">Export Excel</a>
+                        <?php
+                            endif;
+                        ?>
                     </form>
                 </div>
 

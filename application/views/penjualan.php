@@ -51,8 +51,14 @@
 						<input type="text" name="isi" style="width: 30%; padding-left: 1%;" placeholder="cari berdasarkan kode pesanan" />
 						<input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
 
-
-						<a href="<?php echo site_url('welcome/input_pesanan') ?>" style='margin-left: 10%;'>Input Pesanan</a> || <a href="<?php echo site_url('welcome/print_pesanan') ?>" target="_blank">Print Pesanan</a>
+						<?php
+						if ($this->session->userdata('status') !== 'gudang') :
+						?>
+							<a href="<?php echo site_url('welcome/input_pesanan') ?>" style='margin-left: 10%;'>Input Pesanan</a>
+							|| <a href="<?php echo site_url('welcome/print_pesanan') ?>" target="_blank">Print Pesanan</a>
+						<?php
+						endif;
+						?>
 
 
 					</form>
@@ -88,8 +94,15 @@
 								<td class="option">
 									<a href="<?php echo site_url('welcome/form_edit_psn/' . $value->kode_penjualan) ?>" style="color: #8B0000; font-size: 14px;">Edit</a> ||
 									<a href="<?php echo site_url('welcome/delete_psn/' . $value->kode_penjualan) ?>" onclick="return confirm('Yakin ingin menghapus data ?')" style="color: #8B0000; font-size: 14px;">Hapus</a> ||
-									<a href="#" onclick="detail('<?= $value->kode_penjualan ?>')" style="color: #8B0000; font-size: 14px;">Detail</a> ||
-									<a href="<?php echo site_url('welcome/export_penjualan_pdf/' . $value->kode_penjualan) ?>" style="color: #8B0000; font-size: 14px;" target="__blank">Export</a>
+									<a href="#" onclick="detail('<?= $value->kode_penjualan ?>')" style="color: #8B0000; font-size: 14px;">Detail</a>
+									<?php
+									if ($this->session->userdata('status') !== 'gudang') :
+									?>
+										||
+										<a href="<?php echo site_url('welcome/export_penjualan_pdf/' . $value->kode_penjualan) ?>" style="color: #8B0000; font-size: 14px;" target="__blank">Export</a>
+									<?php
+									endif;
+									?>
 								</td>
 							</tr>
 						<?php
@@ -111,22 +124,22 @@
 				<h2>Detail Penjualan</h2>
 			</div>
 			<div class="modal-body">
-			<div style="margin: 10px;">
-				<table>
-					<thead>
-						<tr>
-							<th>No</th>
-							<th>Kode Pesanan</th>
-							<th>Nama Barang</th>
-							<th>Harga</th>
-							<th>Jumlah</th>
-							<th>Satuan</th>
-						</tr>
-					</thead>
-					<tbody id="result">
-					</tbody>
-				</table>
-			</div>
+				<div style="margin: 10px;">
+					<table>
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>Kode Pesanan</th>
+								<th>Nama Barang</th>
+								<th>Harga</th>
+								<th>Jumlah</th>
+								<th>Satuan</th>
+							</tr>
+						</thead>
+						<tbody id="result">
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<div class="modal-footer">
 			</div>

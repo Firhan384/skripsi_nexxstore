@@ -57,7 +57,7 @@
 								<td><?= $value->tanggal ?></td>
 								<td>
 									<?php
-									if ($this->session->userdata('status') == 'gudang') :
+									if ($this->session->userdata('status') == 'gudang' || $this->session->userdata('status') == 'Staff Admin Gudang') :
 									?>
 										<a href="<?php echo site_url('welcome/input_penerima/' . $value->kode_pembelian) ?>" style="color: #8B0000; font-size: 14px;">Input</a>
 									<?php endif; ?> ||

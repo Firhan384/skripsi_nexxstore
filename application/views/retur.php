@@ -38,7 +38,7 @@
                         <input type="text" name="isi" style="width: 30%; padding-left: 1%;" placeholder="cari berdasarkan kode retur" />
                         <input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
                         <?php
-                        if ($this->session->userdata('status') !== 'gudang') :
+                        if ($this->session->userdata('status') === 'manager' || $this->session->userdata('status') === 'Staff Admin Gudang' || $this->session->userdata('status') === 'Staff Penjualan' || $this->session->userdata('status') === 'gudang') :
                         ?>
                             <a href="<?php echo site_url('welcome/input_retur') ?>" style='margin-left: 5%;'>Input retur</a> || <a href="<?php echo site_url('welcome/print_retur') ?>" target="_blank">Print retur</a> || <a href="<?php echo site_url('welcome/export_excel_retur') ?>" target="_blank">Export Excel</a>
                         <?php
@@ -81,7 +81,7 @@
                                 <td><?= $value['deskripsi'] ?></td>
                                 <td>
                                     <?php
-                                    if ($this->session->userdata('status') !== 'gudang') :
+                                    if ($this->session->userdata('status') === 'manager' || $this->session->userdata('status') === 'Staff Admin Gudang' || $this->session->userdata('status') === 'Staff Penjualan' || $this->session->userdata('status') === 'gudang') :
                                     ?>
                                         <a href="<?php echo site_url('welcome/form_edit_retur/' . $value['id']) ?>" style="color: #8B0000; font-size: 14px;">Edit</a>
                                         <?php

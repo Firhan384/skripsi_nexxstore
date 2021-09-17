@@ -52,7 +52,7 @@
                         <input type="submit" name="cari" value="Cari" style="width:15%; height:25px; padding-left:0px;" />
 
                         <?php
-                        if ($this->session->userdata('status') !== 'gudang') :
+                        if ($this->session->userdata('status') === 'Staff Finance') :
                         ?>
                             <a href="<?php echo site_url('welcome/input_pembelian') ?>" style='margin-left: 10%;'>Input Pembelian</a> || <a href="<?php echo site_url('welcome/print_pesanan') ?>" target="_blank">Print Pembelian</a>
                         <?php

@@ -39,7 +39,7 @@
                 endif;
                 ?>
                 <?php
-                if ($this->session->userdata('status') === 'gudang' && $this->session->userdata('status') === 'Staff Admin Gudang') :
+                if ($this->session->userdata('status') === 'gudang' || $this->session->userdata('status') === 'Staff Admin Gudang') :
                 ?>
                     <li><a href="<?php echo site_url('welcome/hal_retur') ?>">Retur</a></li>
                     <li><a href="<?php echo site_url('welcome/hal_pengiriman') ?>">Pengiriman</a></li>
@@ -59,11 +59,6 @@
                 <?php
                 endif;
                 ?>
-                <li><a href="<?php echo site_url('welcome/hal_penjualan') ?>">Penjualan</a></li>
-                <li><a href="<?php echo site_url('welcome/hal_pembelian') ?>">Pembelian</a></li>
-                <li><a href="<?php echo site_url('welcome/hal_retur') ?>">Retur</a></li>
-                <li><a href="<?php echo site_url('welcome/hal_pengiriman') ?>">Pengiriman</a></li>
-                <li><a href="<?php echo site_url('welcome/hal_penerima') ?>">Penerima</a></li>
                 <?php
                 if ($this->session->userdata('status') === 'Manager') :
                 ?>
@@ -88,7 +83,7 @@
         endif;
         ?>
         <?php
-        if ($this->session->userdata('status') === 'gudang' && $this->session->userdata('status') === 'Staff Admin Gudang') :
+        if ($this->session->userdata('status') === 'gudang' || $this->session->userdata('status') === 'Staff Admin Gudang') :
         ?>
             <li><a href="<?php echo site_url('welcome/hal_stok') ?>">Stok Barang</a></li>
         <?php
